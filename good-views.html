@@ -918,13 +918,13 @@ Alternative caption of the same scene:</code></pre>
         markers like literal “[SEP]” or Qwen’s end-of-text token do not help (Appendix A3).</p>
 
       <p>Closest to this, Wang et al. raise frozen Qwen3’s alignment with DINOv2 on WIT with sensory prompts
-        (“imagine what it would be like to see…”) <a class="cite" href="#ref-8" data-cite="8">[8]</a>. They let the model generate a continuation and average its
+        (“imagine what it would be like to see…”) <a class="cite" href="#ref-5" data-cite="5">[5]</a>. They let the model generate a continuation and average its
         hidden states over the generated tokens and over all layers; in a single forward pass averaged over the input
         tokens, the prompt did not help. The prompted last-token state here needs no generation. Wang et al. also find
         that mean-pooling over generated tokens beats single-token readouts <a class="cite" href="#ref-7" data-cite="7">[7]</a>. Here, greedily generating an
         alternative caption and pooling its states did not beat the single prompted last-token state (33.9% vs 35.4%
         Flickr R@1 on 0.5B; Appendix A3), but that comparison reads single layers only. Averaging over all layers, which
-        Wang et al. find often beats any single layer <a class="cite" href="#ref-8" data-cite="8">[8]</a>, I haven’t tested yet.</p>
+        Wang et al. find often beats any single layer <a class="cite" href="#ref-5" data-cite="5">[5]</a>, I haven’t tested yet.</p>
 
       <figure id="fig3">
         <h4>Figure 3 · Frozen Qwen2.5: raw caption vs prompted readout</h4>
@@ -1089,8 +1089,6 @@ Alternative caption of the same scene:</code></pre>
             Retrieval</a>. arXiv:2404.18424, 2024.</li>
         <li id="ref-7">S. L. Wang, P. Isola, B. Cheung. <a href="https://arxiv.org/abs/2605.09969">The Truth Lies
             Somewhere in the Middle (of the Generated Tokens)</a>. arXiv:2605.09969, 2026.</li>
-        <li id="ref-8">S. L. Wang, P. Isola, B. Cheung. <a href="https://arxiv.org/abs/2510.02425">Words That
-            Make Language Models Perceive</a>. arXiv:2510.02425, 2025.</li>
       </ol>
 
       <details class="bib" open>
@@ -1604,8 +1602,7 @@ Alternative caption of the same scene:</code></pre>
         4: "<b>Repetition Improves Language Model Embeddings</b> (echo embeddings)<br>J. Springer et al. · arXiv:2402.15449, 2024",
         5: "<b>Words That Make Language Models Perceive</b><br>S. L. Wang, P. Isola, B. Cheung · arXiv:2510.02425, 2025",
         6: "<b>PromptReps: Prompting Large Language Models to Generate Dense and Sparse Representations for Zero-Shot Document Retrieval</b><br>S. Zhuang, X. Ma, B. Koopman, J. Lin · arXiv:2404.18424, 2024",
-        7: "<b>The Truth Lies Somewhere in the Middle (of the Generated Tokens)</b><br>S. L. Wang, P. Isola, B. Cheung · arXiv:2605.09969, 2026",
-        8: "<b>Words That Make Language Models Perceive</b><br>S. L. Wang, P. Isola, B. Cheung · arXiv:2510.02425, 2025"
+        7: "<b>The Truth Lies Somewhere in the Middle (of the Generated Tokens)</b><br>S. L. Wang, P. Isola, B. Cheung · arXiv:2605.09969, 2026"
       };
       document.querySelectorAll("a.cite").forEach(a => {
         const html = a.dataset.cite.split(",").map(n => `<span style="display:block;margin:2px 0">[${n}] ${REFS[n]}</span>`).join("");
