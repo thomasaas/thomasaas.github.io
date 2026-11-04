@@ -715,7 +715,7 @@
         same caption pairs barely improves over single-caption training. They conclude that the gain comes from the JEPA
         objective rather than the paired data. However, that
         baseline is evaluated by mean-pooling over the caption. Evaluating the same checkpoint at <code>[SEP]</code>,
-        the position trained to predict the other caption, matches the good-view JEPA on Flickr R@1 through one
+        the boundary token between the two captions in training, matches the good-view JEPA on Flickr R@1 through one
         rotation (24.5% vs 24.6%). Training it to predict only the other caption reaches 27.8%, while the JEPA still
         leads on mutual 10-NN. Frozen Qwen2.5-0.5B and 1.5B baselines also jump from 24% to 35–43% R@1 when read out
         after a short prompt. At the paper’s smallest web-scale point (2.24M images), reading <code>[SEP]</code> closes
