@@ -19,6 +19,7 @@
   <link rel="canonical" href="https://thomasaas.github.io/good-views.html">
   <meta property="og:type" content="article">
   <meta property="article:published_time" content="2026-11-04">
+  <meta property="article:modified_time" content="2026-11-07">
   <meta property="og:url" content="https://thomasaas.github.io/good-views.html">
   <meta property="og:title" content="Good Views Hidden in Plain Sight">
   <meta property="og:description" content="A closer look at the next-token baselines in “Proving and Improving the PRH with JEPAs”: read at [SEP], the paper’s own paired NTP baseline matches the good-view JEPA on Flickr retrieval.">
@@ -42,6 +43,7 @@
       "url": "https://thomasaas.github.io/"
     },
     "datePublished": "2026-11-04",
+    "dateModified": "2026-11-07",
     "description": "Read at the token its objective supervises, the paired next-token baseline of “Proving and Improving the Platonic Representation Hypothesis with JEPAs” matches the good-view JEPA on Flickr retrieval.",
     "image": "https://thomasaas.github.io/good-views.png",
     "mainEntityOfPage": "https://thomasaas.github.io/good-views.html",
@@ -66,6 +68,7 @@
       --conditional: #1f8a7a;
       --jepa: #6a52d9;
       --qwen: #3c78c3;
+      --bad: #c8453c;
       --tipbg: #1d1d1f;
       --tipfg: #f2f7f3;
     }
@@ -84,6 +87,7 @@
         --conditional: #43c2ad;
         --jepa: #9d8cff;
         --qwen: #6fa8ec;
+        --bad: #ff7f75;
         --tipbg: #edf5f0;
         --tipfg: #1b1b1d;
       }
@@ -102,6 +106,7 @@
       --conditional: #43c2ad;
       --jepa: #9d8cff;
       --qwen: #6fa8ec;
+      --bad: #ff7f75;
       --tipbg: #edf5f0;
       --tipfg: #1b1b1d;
     }
@@ -169,6 +174,18 @@
       color: var(--muted);
       font-size: .9rem;
       margin-bottom: 2rem
+    }
+
+    .meta:has(+ .rev) {
+      margin-bottom: .8rem
+    }
+
+    .rev {
+      font-size: .85rem;
+      color: var(--muted);
+      border-left: 3px solid var(--accent);
+      padding: 2px 0 2px 10px;
+      margin: 0 0 1.6rem
     }
 
     p {
@@ -505,6 +522,35 @@
       font-size: .8rem
     }
 
+    .panels5 svg text {
+      font-size: 13px
+    }
+
+    .panels5 svg text.lab {
+      font-size: 12px
+    }
+
+    .panels5 svg text.ttl {
+      font-size: 14.5px;
+      fill: var(--fg)
+    }
+
+    .leg5 svg {
+      vertical-align: -2px
+    }
+
+    .panels5 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 8px
+    }
+
+    tr.grp td {
+      font-weight: 600;
+      font-size: .85rem;
+      padding-top: .9em
+    }
+
     td.best {
       font-weight: 700
     }
@@ -722,6 +768,8 @@
       <p class="subtitle">A Closer Look at the Next-Token Baselines in “Proving and Improving the Platonic Representation
         Hypothesis with JEPAs”</p>
       <div class="meta"><time datetime="2026-11-04">4 November 2026</time> · preliminary, single-seed experiments · <a href="good-views.pdf">PDF</a></div>
+      <p class="rev"><b>Updated <time datetime="2026-11-07">7 November 2026</time>:</b> added further results and updated
+        the text for easier readability.</p>
 
       <details class="aiuse">
         <summary title="Show how much of this work was done by AI">AI Usage</summary>
@@ -744,11 +792,11 @@
         baseline is evaluated by mean-pooling the caption’s hidden states. Using the hidden state at <code>[SEP]</code>
         (<span class="key">h([SEP])</span>, the boundary token between the two captions in training) instead of
         mean-pooling, the same checkpoint matches the good-view JEPA on Flickr R@1 through one
-        rotation (24.5% vs 24.6%). Training it to predict only the other caption reaches 27.8%, while the JEPA still
-        leads on mutual 10-NN. Frozen Qwen2.5-0.5B and 1.5B baselines also jump from 24% to 35–43% R@1 when read out
-        after a short prompt. At the paper’s smallest web-scale point (2.24M images), reading <span class="key">h([SEP])</span> closes
-        most of the WIT gap (.075 → .093 vs .107) but leaves a clear Flickr retrieval gap (25.3% vs 33.9%). Comparisons
-        between NTP and JEPA representations are thus sensitive to how the representation is extracted.
+        rotation (24.5% vs 24.6%) and closes a lot of the gap in other evals. The frozen LLM readouts are also
+        sensitive to prompting and readout choices, as was already shown in previous work. Comparisons
+        between NTP and JEPA representations are thus sensitive to how the representation is extracted. A large part
+        of the sample-efficiency gain of JEPA over NTP in the paper may come from the good-view data, not the
+        objective.
       </div>
 
       <p>In <a href="https://arxiv.org/abs/2610.39302"><em>Proving and Improving the Platonic Representation Hypothesis
@@ -761,7 +809,7 @@
         prediction (NTP). The authors argue that NTP acts like a bad-view JEPA whose positives are a prefix and its
         continuation, and therefore aligns with vision mainly through scale.</p>
 
-      <p>I ran a few quick experiments with LLM coding agents to test that comparison. The paper’s paired-caption NTP
+      <p>I ran a few quick experiments with the help of AI to test that comparison. The paper’s paired-caption NTP
         baseline appears to underestimate what NTP learns from good views because its mean-pooled readout dilutes the
         cross-caption signal.</p>
 
@@ -779,17 +827,22 @@
       <p class="note">(Table 1 measures alignment against an image JEPA trained from scratch on Flickr. Against frozen
         DINOv2 in Table 2, R@1 moves from .118 to .137. All results below use frozen DINOv2.)</p>
 
-      <p>At evaluation time, the paper feeds a single caption <code>[CLS] a [SEP]</code> and mean-pools the final hidden
-        states across all tokens. In earlier layers, tokens in <em>b</em> can attend back to all of <em>a</em> as well
-        as <code>[SEP]</code>, so cross-caption gradients reach the whole prefix. At the final layer, however, each
-        state feeds only the output head at its own position: tokens inside <em>a</em> only see a prefix of <em>a</em>
-        and predict the next token of <em>a</em> (or <code>[SEP]</code>), whereas <code>[SEP]</code> has seen all of
-        <em>a</em> and is the only position trained to predict into the second caption <em>b</em> (specifically its
-        first token). That makes <span class="key">h([SEP])</span> an interesting readout candidate.</p>
+      <p>The main reason they observe no gain is probably the way they read out the representation of the NTP
+        model. At evaluation time, the paper feeds a single caption <code>[CLS] a [SEP]</code> and mean-pools
+        the final hidden states across all tokens. During training, the tokens of <em>b</em> attend to all of
+        <em>a</em>, so the earlier-layer states of <em>a</em> are trained to encode information that helps predict
+        <em>b</em>.
+        The final layer is different: each final hidden state is used only to predict the next token at its own
+        position. For the tokens of <em>a</em>, that is the next word of <em>a</em> (or <code>[SEP]</code>). Only the
+        state at <code>[SEP]</code>, which has seen all of <em>a</em>, is trained to predict the start of <em>b</em>.
+        Mean pooling averages mostly over the former. That makes <span class="key">h([SEP])</span> an interesting readout candidate.</p>
 
-      <p>Appendix B of the paper tests a last-token readout only on single-caption NTP, where it trails mean pooling
-        (R@1 .061 vs .119). That is expected: there <code>[SEP]</code> is followed by ignored padding and receives no loss. In the paired
-        model, <code>[SEP]</code> predicts the first token of <em>b</em>, yet wasn’t evaluated separately.</p>
+      <p>Appendix B of the paper even tests a last-token (that is, <code>[SEP]</code>) readout, but only on
+        single-caption NTP, where it trails mean pooling (R@1 .061 vs .119). That is expected: there
+        <code>[SEP]</code> is followed by ignored padding and receives no loss. In the paired model, <code>[SEP]</code>
+        predicts the first token of <em>b</em>, so it should contain much more information, yet wasn’t evaluated
+        separately. My results show that simply using that <span class="key">h([SEP])</span> instead of mean pooling
+        already closes much of the gap to the good-view JEPA.</p>
 
       <figure id="fig1">
         <h4>Figure 1 · Same checkpoints, different readout</h4>
@@ -822,21 +875,21 @@
       </ul>
 
       <p>On retrieval through an orthogonal map (the paper’s “direct test of equality up to rotation”), paired NTP read
-        at h([SEP]) matches the good-view JEPA on the 1k-pair fit, while the JEPA retains a clear lead on mutual 10-NN.
-        An independent GPT-written run stopped at epoch 139 shows the same jump (14.0% → 22.2% on 1k, 26.1% → 31.5% on
-        30k).</p>
+        at h([SEP]) matches the good-view JEPA on the 1k-pair fit. The JEPA still clearly leads on mutual 10-NN, but
+        there too the gap closes substantially compared to the mean-pooled readout.</p>
 
       <p>Reading h([SEP]) hurts both single-caption NTP (11.1% → 6.6%) and the JEPA (11.1% vs 24.9% for h([CLS])). It
         only helps when <code>[SEP]</code> precedes a second caption of the <em>same</em> image during training: in a
         25-epoch pilot where caption <em>a</em> was paired with a caption from a different image, h([SEP]) dropped to
-        chance (Appendix A1).</p>
+        near chance, as one would expect (Appendix A1).</p>
 
-      <p>Alignment at h([SEP]) also keeps rising while the validation loss more than doubles (Figure 2). The paper’s
-        validation metric (used for its early-stopped row, though main tables use final checkpoints) is next-token loss
-        on <em>single</em> captions, which rises after ~20–30 epochs as the model memorises training phrasing. Because
-        single captions have only ignored padding after <code>[SEP]</code>, that validation loss never evaluates
-        <code>[SEP]</code> or cross-caption prediction; early-stopping on it would pick epoch 20 (17.5% R@1 instead of
-        24.5%).</p>
+      <p>Other readout choices can help as well. Wang et al. average the hidden states over all layers instead of
+        reading only the last one <a class="cite" href="#ref-5" data-cite="5">[5]</a>. On these Flickr models, that
+        raises mean-pooled paired NTP from 13.2% to 16.3% R@1 (1k fit) and ordinary NTP from 11.1% to 14.3%, but both
+        stay far below h([SEP]) (24.5%), and averaging h([SEP]) itself over layers lowers it to 22.2% (Appendix A1).
+        Generic readouts like this help a little across models. For a model trained on pairs (<em>a</em>,
+        <em>b</em>) that describe the same scene, reading the position trained to predict <em>b</em> from all of
+        <em>a</em> targets what the pairing teaches, and is more effective.</p>
 
       <h2>Predicting only the other caption</h2>
 
@@ -858,29 +911,6 @@
         mean-pools all models across layers following the PRH protocol <a class="cite" href="#ref-2"
           data-cite="2">[2]</a>.)</p>
 
-      <figure id="fig2">
-        <h4>Figure 2 · Alignment during training</h4>
-        <div class="ui"><label for="m2">Metric</label>
-          <select id="m2">
-            <option value="r1k">R@1, rotation fitted on 1k pairs</option>
-            <option value="mknn">Mutual 10-NN</option>
-            <option value="loss">Validation loss (paired NTP)</option>
-          </select>
-        </div>
-        <div class="ui" id="chips2"></div>
-        <div class="lossnote" id="lossnote" hidden><b>Why this loss rises while alignment improves.</b> It only scores
-          predicting each word of a single caption from the words before it, and it gets worse as the model memorises
-          the wording of the training captions (the paper sees the same for ordinary NTP). It never scores the
-          <code>[SEP]</code> position, so it doesn’t measure what h([SEP]) is read for. Over the same epochs, h([SEP])
-          R@1 rises from 17.5% at the loss minimum (epoch 20) to 24.5% at epoch 200.</div>
-        <div id="chart2"></div>
-        <figcaption>Solid lines are the alternative readout, dashed lines the readout the paper uses. Paired NTP: every
-          10 epochs from the run’s own validation dumps (bf16). Other runs: saved checkpoints re-embedded in fp32. One
-          seed each. Validation loss is single-caption next-token loss on val+test captions (used for the paper’s
-          early-stopped row); because single captions have only ignored padding after [SEP], it never scores predicting
-          <em>b</em> from <em>a</em>.</figcaption>
-      </figure>
-
       <h3>All numbers</h3>
       <div class="tw">
         <table id="t1"></table>
@@ -898,95 +928,78 @@
       <div class="tw">
         <table id="tMF"></table>
       </div>
-      <p class="note">Single seeds, 200 epochs. Paired NTP: Claude-run with the authors’ code; conditional NTP and the
-        JEPA: GPT-run. More tasks and readouts in Appendix A1.</p>
+      <p class="note">Single seeds, 200 epochs. More tasks and readouts in Appendix A1.</p>
 
-      <h2>At web scale: the 2M Recap point</h2>
+      <h3>Against the paper’s image JEPA</h3>
+      <p>The paper’s Figure 5 tracks alignment with a separately trained Flickr image JEPA during training and finds
+        that next-token prediction aligns markedly worse than the good-view JEPA (mutual 10-NN .042 vs .062 at the end).
+        Rerunning it with the image JEPA retrained from the authors’ code reproduces both endpoints. Read at h([SEP]),
+        paired NTP (.055) and conditional NTP (.058) end most of the way to the JEPA.</p>
 
-      <p>To test beyond Flickr, I trained paired BERT-S NTP on the smallest web-scale point in the paper’s scaling plot:
-        2.24M Recap-DataComp images (one alt-text and two LLaVA recaptions per image), following the exact schedule of
-        the Table 7 good-view JEPA control (20 × 1M samples, learning rate 10<sup>−4</sup>, gradient clip 1.0, one
-        seed).</p>
+      <figure id="fig4">
+        <h4>Figure 2 · Alignment with the image JEPA during training</h4>
+        <div class="ui"><label for="m4">Metric</label>
+          <select id="m4">
+            <option value="mknn">Mutual 10-NN</option>
+            <option value="r1">Image→caption R@1, one rotation</option>
+            <option value="r5">Image→caption R@5, one rotation</option>
+          </select>
+        </div>
+        <div class="ui" id="chips4"></div>
+        <div id="chart4"></div>
+        <figcaption>Image side: the paper’s Flickr image JEPA (ViT-S/16, 200 epochs, seed 0), retrained with the authors’
+          code, at the same epoch as each text checkpoint. Text side: first caption of the 2,014 val+test pairs, final
+          layer; rotation fitted on the 1,014 val pairs, scored on the 1,000 test pairs. Dashed lines are the paper’s
+          readouts, solid lines the alternative. Paired NTP: every 10 epochs from its run’s validation dumps; other
+          runs: saved checkpoints. One seed each, so R@1 (a few percent here) is noisy. Dotted line: chance.</figcaption>
+      </figure>
 
-      <p>Mean pooling again shows little gain from pairing: .075 WIT mutual 10-NN (vs .070–.071 for single-caption NTP)
-        and 23.2% Flickr R@1 (vs 22.3–24.6%). Reading h([SEP]) raises WIT mutual 10-NN to .093, close to the JEPA’s
-        range (.095–.115, mean .107), but only lifts Flickr R@1 to 25.3% against the JEPA’s 33.9%, a gap substantially larger than the seed variation
-        the paper reports.</p>
+      <h2>At web scale: the 2M and 50M Recap points</h2>
 
-      <p>Reading one token further by appending “the” (which starts nearly every Recap recaption) reaches .104 on WIT
-        and 30.1% on Flickr, though this was the best of ten readouts scored on the same test sets, so treat it as a lead rather than a result (Appendix A2). Testing the analogous pre-declared heuristic on Flickr by appending “a” (the most common first word in
-        Flickr) gave smaller, inconsistent changes: +2.1 points on 30k-pair retrieval and +0.016 on mutual 10-NN, but
-        −0.2 on 1k-pair retrieval, with +0.9 on 30k-pair retrieval for the JEPA control as well (Appendix A1). One
-        possible reason paired NTP lags further behind on Recap is that two of the three captions per image come from
-        the same LLaVA captioner, so predicting <em>b</em> from <em>a</em> also rewards matching generator style. That is untested.</p>
+      <p>To test beyond Flickr, I trained paired BERT-S NTP on two web-scale points in the paper’s scaling plot: 2M and
+        50M. Here, at first glance, the gap still closes, but not as much. But when you look at the data, you can see that
+        a lot of the captions start with something like “The image shows”, which could act similarly to the separator
+        token. Reading one token further by appending “the” (which starts nearly every Recap recaption) already closes a
+        lot of the gap. Appending “this image shows”, generating up to 32 tokens and pooling the hidden states that
+        predicted them also improves the alignment, mainly on Flickr.</p>
       <div class="tw">
         <table id="tWeb"></table>
       </div>
-      <p class="note">One seed. WIT: the paper’s PRH protocol (per-layer features, best layer pair; the JEPA’s .107 is
-        mean-pooled). Flickr: final layer, rotation fitted on 30k pairs, frozen DINOv2. Full readout search, including
-        generated continuations, in Appendix A2.</p>
+
+      <figure id="fig5">
+        <h4>Figure 3 · Paired NTP in the paper’s scaling plot</h4>
+        <div class="ui" id="chips5"></div>
+        <p class="note leg5"><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="4.5" fill="var(--jepa)"></circle></svg> the paper’s values &nbsp;·&nbsp; <svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="4.5" fill="var(--paired)"></circle></svg> our runs</p>
+        <div class="panels5" id="chart5"></div>
+        <figcaption>Text encoders trained on the texts of Recap-DataComp images, never on Flickr or WIT, scored against
+          frozen DINOv2 ViT-B/14: WIT-1024 mutual 10-NN with the PRH protocol (best layer pair) and Flickr image→caption
+          R@1 through one rotation fitted on 30k pairs. Paper values (grey shading, purple, grey and red) are three-seed
+          means where it reports seeds. The paper’s 2M point uses the texts of 2.16M images, ours 2.24M (Table 7’s texts). Ours (orange): one
+          seed per scale, four readouts of the same checkpoint. Hover or tap a point for its source.</figcaption>
+      </figure>
 
       <h2>Readouts for frozen language models</h2>
 
       <p>Pretrained LLM baselines in the paper are also mean-pooled over the raw caption. Appending a short prompt and
-        reading the final token’s hidden state (without generating tokens) substantially changes their scores. Prompted last-token embeddings are well known <a class="cite"
-          href="#ref-3" data-cite="3,4,5,6">[3–6]</a>; here they just show that the LLM baselines are also sensitive
-        to the readout:</p>
-      <pre><code>Caption: {A}
-Alternative caption of the same scene:</code></pre>
-      <p>Under the paper’s Flickr protocol (final layer, 30k-pair rotation), Qwen2.5-0.5B R@1 jumps from <b>24.1% to
-          35.4%</b> (14.0% to 22.2% with a 1k-pair fit), passing the Flickr-trained good-view JEPA (34.6%). On
-        Qwen2.5-1.5B, a continuation prompt reaches <b>42.9%</b> (raw caption 24.5%, alternative prompt 35.3%). On
-        WIT-1024, mutual 10-NN rises from <b>.102 to .138</b> (0.5B), <b>.108 to .155</b> (1.5B), and <b>.153 to
-          .170</b> (72B). The relative gain shrinks with scale, the continuation prompt hurts at 72B, and 72B remains
-        below the paper’s 109M web-trained JEPA (.184).</p>
-
-      <p>Prompt wording itself may matter less than providing a post-caption summary position: “Continuation of this
-        caption:” matches “Alternative caption of the same scene:” on 0.5B and beats it on 1.5B Flickr, whereas bare
-        markers like literal “[SEP]” or Qwen’s end-of-text token do not help (Appendix A3).</p>
-
-      <p>Closest to this, Wang et al. raise frozen Qwen3’s alignment with DINOv2 on WIT with sensory prompts
-        (“imagine what it would be like to see…”) <a class="cite" href="#ref-5" data-cite="5">[5]</a>. They let the model generate a continuation and average its
-        hidden states over the generated tokens and over all layers; in a single forward pass averaged over the input
-        tokens, the prompt did not help. The prompted last-token state here needs no generation. Wang et al. also find
-        that mean-pooling over generated tokens beats single-token readouts <a class="cite" href="#ref-7" data-cite="7">[7]</a>. Here, greedily generating an
-        alternative caption and pooling its states did not beat the single prompted last-token state (33.9% vs 35.4%
-        Flickr R@1 on 0.5B; Appendix A3), but that comparison reads single layers only. Averaging over all layers, which
-        Wang et al. find often beats any single layer <a class="cite" href="#ref-5" data-cite="5">[5]</a>, I haven’t tested yet.</p>
-
-      <figure id="fig3">
-        <h4>Figure 3 · Frozen Qwen2.5: raw caption vs prompted readout</h4>
-        <div class="ui"><label for="m3">Metric</label>
-          <select id="m3">
-            <option value="fl30k">Flickr R@1, rotation fitted on 30k pairs</option>
-            <option value="fl1k">Flickr R@1, rotation fitted on 1k pairs</option>
-            <option value="best">WIT-1024 mutual 10-NN, best layer pair (paper protocol)</option>
-            <option value="fixed">WIT-1024 mutual 10-NN, layers fixed to the baseline’s</option>
-          </select>
-        </div>
-        <div class="chart" id="chart3" role="group" aria-label="Bar chart of Qwen readouts"></div>
-        <div class="legend">
-          <span><i style="background:var(--qwen);opacity:.42"></i>raw caption, mean (paper)</span>
-          <span><i style="background:var(--qwen)"></i>prompt, last token</span>
-          <span id="ref3"></span>
-        </div>
-        <figcaption id="cap3"></figcaption>
-      </figure>
+        reading the final token’s hidden state (without generating tokens) substantially changes their alignment scores
+        on both Flickr and WIT-1024. Prompted last-token embeddings are well known <a class="cite" href="#ref-3"
+          data-cite="3,4,5,6,7">[3–7]</a>; here they simply show that the frozen LLM baselines are likewise sensitive to
+        how the representation is read out. Full results and Figure 5 are in Appendix A3.</p>
 
       <h2>Conclusion</h2>
 
-      <p>On Flickr with 33M models, the paper’s paired control does not show that alignment gains come from the JEPA
-        objective rather than the pairing information. Evaluated at <code>[SEP]</code>, the paper’s own paired NTP
-        checkpoint gains 11 R@1 points and matches the good-view JEPA on retrieval through a rotation, while conditional
-        NTP surpasses it. Mean-pooling therefore understates what paired NTP learns, even though the JEPA still leads on
-        mutual 10-NN (.232 vs .170–.185) and on Flickr retrieval at the 2.24M-image Recap point (33.9% vs 25.3%).</p>
+      <p>The results suggest that a lot of the reported gain in sample efficiency of JEPA vs. NTP comes from the
+        good-view data and not the objective, although the JEPA still leads on mutual 10-NN and, at web scale, on Flickr
+        retrieval. Changing how the representations are read out from the model can change the representation
+        alignment substantially, as previous research has already shown <a class="cite" href="#ref-3"
+          data-cite="3,4,5,6,7">[3–7]</a>. The paper’s paired control is read out in a way that understates what it
+        learns.</p>
 
-      <p>Several confounds also remain untested. In the paper, hyperparameters were tuned only for the good-view JEPA, while NTP “use[s] the same recipe and [was] not tuned”;
-        each JEPA sample draws eight views from an image’s five captions whereas
-        paired NTP sees two; and the JEPA encoder is bidirectional while NTP is causal. All runs here use a single seed,
-        prompted LLM readouts were chosen after inspecting Flickr results, conditional NTP was not run at web scale, and
-        the paper’s largest regime (109M models on 940M images) is not tested here. I also haven’t gone through the theory (whose extension to NTP the authors note is
-        heuristic).</p>
+      <p>Several confounds also remain untested. In the paper, hyperparameters were tuned only for the good-view JEPA,
+        while NTP “use[s] the same recipe and [was] not tuned”; each JEPA sample draws eight views from an image’s five
+        captions whereas paired NTP sees two; and the JEPA encoder is bidirectional while NTP is causal. All runs here
+        use a single seed, and the largest training runs of the paper remain to be tested (I will not, as I am
+        GPU-poor). I also haven’t gone through the theory yet.</p>
 
       <p>To reproduce the main Flickr result with the authors’ repository, train with
         <code>train.py --modality text --objective ntp --caption-views</code> and extract features with
@@ -1002,11 +1015,32 @@ Alternative caption of the same scene:</code></pre>
 
       <details>
         <summary>A1 · More Flickr results</summary>
+        <figure id="fig2">
+          <h4>Figure 4 · Alignment during training</h4>
+          <div class="ui"><label for="m2">Metric</label>
+            <select id="m2">
+              <option value="r1k">R@1, rotation fitted on 1k pairs</option>
+              <option value="mknn">Mutual 10-NN</option>
+              <option value="loss">Validation loss (paired NTP)</option>
+            </select>
+          </div>
+          <div class="ui" id="chips2"></div>
+          <div class="lossnote" id="lossnote" hidden><b>Why this loss rises while alignment improves.</b> It only scores
+            predicting each word of a single caption from the words before it, and it gets worse as the model memorises
+            the wording of the training captions (the paper sees the same for ordinary NTP). It never scores the
+            <code>[SEP]</code> position, so it doesn’t measure what h([SEP]) is read for. Over the same epochs, h([SEP])
+            R@1 rises from 17.5% at the loss minimum (epoch 20) to 24.5% at epoch 200.</div>
+          <div id="chart2"></div>
+          <figcaption>Solid lines are the alternative readout, dashed lines the readout the paper uses. Paired NTP: every
+            10 epochs from the run’s own validation outputs. Other runs: saved checkpoints. One
+            seed each. Validation loss is single-caption next-token loss on val+test captions (used for the paper’s
+            early-stopped row); because single captions have only ignored padding after [SEP], it never scores predicting
+            <em>b</em> from <em>a</em>.</figcaption>
+        </figure>
+
         <h4>Other tasks</h4>
         <p class="note">The same frozen 200-epoch checkpoints and readouts as in Figure 1, on tasks without a fitted
-          image map (except COCO). Ordinary and conditional NTP and the JEPA were scored by the GPT-run pipeline. Paired
-          NTP was scored with a reimplementation of the same protocols, which reproduces the GPT-run numbers exactly on
-          its 139-epoch checkpoint.</p>
+          image map (except COCO).</p>
         <div class="tw">
           <table id="tA1"></table>
         </div>
@@ -1015,14 +1049,24 @@ Alternative caption of the same scene:</code></pre>
         <div class="tw">
           <table id="tA3"></table>
         </div>
+
+        <h4>Averaging over layers</h4>
+        <p class="note">Each readout taken from the final layer (as everywhere else in this post) and from the average
+          of all 12 block outputs, as in Wang et al. <a class="cite" href="#ref-5" data-cite="5">[5]</a>. Same
+          checkpoints and protocol as Figure 1. Layer averaging helps mean pooling of both NTP models, but hurts the
+          trained summary positions (h([SEP]) of paired and conditional NTP) and leaves the JEPA’s h([CLS]) almost
+          unchanged.</p>
+        <div class="tw">
+          <table id="tLA"></table>
+        </div>
         
         <h4>Control: caption pairs from different images</h4>
         <p class="note">To check whether h([SEP]) benefits simply from having any second caption after
-          <code>[SEP]</code>, the 25-epoch GPT-run pilot included a shuffled control. It matches conditional NTP (loss
+          <code>[SEP]</code>, a 25-epoch pilot included a shuffled control. It matches conditional NTP (loss
           only on <em>b</em>), except caption <em>a</em> comes from a different image in the batch. With unrelated
           context, the model ignores <em>a</em>: single-caption embeddings collapse to effective rank ~1, and alignment
-          drops to chance under both readouts. These are 25-epoch pilot checkpoints from an earlier training loop, not the 200-epoch runs; in those,
-          h([SEP]) only overtakes mean pooling after about 20–30 epochs (Figure 2).</p>
+          drops to near chance under both readouts. These are 25-epoch pilot checkpoints, not the 200-epoch runs; in those,
+          h([SEP]) only overtakes mean pooling after about 20–30 epochs (Figure 4).</p>
         <div class="tw">
           <table id="tA3c"></table>
         </div>
@@ -1031,8 +1075,7 @@ Alternative caption of the same scene:</code></pre>
         <p class="note">To test whether reading one token into caption <em>b</em> also helps on Flickr, I appended “a”
           (the most common first word in Flickr training captions, chosen before scoring) to give
           <code>[CLS] a-caption [SEP] a</code>. Paired NTP is read at the appended “a”, while the JEPA is still read at
-          h([CLS]) as a control for adding the token (reading the JEPA at “a” performed much worse). Evaluated on the 200-epoch Figure 1 checkpoints; GPT-run (Codex), whose h([SEP]) and h([CLS]) numbers reproduce
-          ours: paired NTP improves on 30k-pair retrieval (+2.1), mutual 10-NN, and caption
+          h([CLS]) as a control for adding the token (reading the JEPA at “a” performed much worse). Evaluated on the 200-epoch Figure 1 checkpoints: paired NTP improves on 30k-pair retrieval (+2.1), mutual 10-NN, and caption
           retrieval, is flat on 1k-pair retrieval, and dips on STS-B; the JEPA control gains +0.9 on 30k-pair retrieval and a little on STS-B. One seed; not significant on its
           own.</p>
         <div class="tw">
@@ -1045,8 +1088,7 @@ Alternative caption of the same scene:</code></pre>
         <p class="note">All readouts of the Recap paired-NTP checkpoint (final, seed 0) that were tried, reported equally.
           Prefixes are appended after <code>[SEP]</code> as the beginning of a caption <em>b</em>; the state of the last
           prefix token is read. Caption <em>a</em> is unchanged and nothing is generated. These were scored on the same
-          Flickr and WIT test sets, so the best entry is optimistically selected. GPT-run (Codex); its mean and h([SEP])
-          numbers match the Claude-run evaluation exactly.</p>
+          Flickr and WIT test sets, so the best entry is optimistically selected.</p>
         <p class="note">One untested reading of why “the” beats h([SEP]) here: in Recap, caption <em>b</em> is either
           an alt-text (short, varied) or a LLaVA recaption (“The image shows…”). So part of what h([SEP]) is trained to
           predict is which kind of caption comes next, which is about format rather than the scene. Appending “the”
@@ -1058,12 +1100,56 @@ Alternative caption of the same scene:</code></pre>
           <table id="tA6"></table>
         </div>
         <p class="note">Generating a continuation and pooling its hidden states (8 or 32 greedy tokens, with or without a
-          prefix) reaches at most 31.4% Flickr R@1 (30k) and .094 on WIT: no clear gain over appending “the”, and worse on WIT. Wang et al. report that pooling generated tokens beats
+          prefix) reaches at most 31.4% Flickr R@1 (30k; “this image shows” + 32 tokens) and .095 on WIT: no clear gain over appending “the”, and worse on WIT. Wang et al. report that pooling generated tokens beats
           single tokens for pretrained LLMs <a class="cite" href="#ref-7" data-cite="7">[7]</a>; this small trained model doesn’t show that.</p>
       </details>
 
       <details>
-        <summary>A3 · Frozen Qwen2.5: all 15 readout conditions</summary>
+        <summary>A3 · Frozen Qwen2.5: prompted readouts and all 15 conditions</summary>
+        <p class="note">Appending a short prompt and reading the final token’s hidden state (without generating tokens)
+          substantially changes the frozen Qwen2.5 baselines:</p>
+        <pre><code>Caption: {A}
+Alternative caption of the same scene:</code></pre>
+        <p class="note">Under the paper’s Flickr protocol (final layer, 30k-pair rotation), Qwen2.5-0.5B R@1 jumps from
+          <b>24.1% to 35.4%</b> (14.0% to 22.2% with a 1k-pair fit), passing the Flickr-trained good-view JEPA (34.6%).
+          On Qwen2.5-1.5B, a continuation prompt reaches <b>42.9%</b> (raw caption 24.5%, alternative prompt 35.3%). On
+          WIT-1024, mutual 10-NN rises from <b>.102 to .138</b> (0.5B), <b>.108 to .155</b> (1.5B), and <b>.153 to
+            .170</b> (72B). The relative gain shrinks with scale, the continuation prompt hurts at 72B, and 72B remains
+          below the paper’s 109M web-trained JEPA (.184).</p>
+        <p class="note">Prompt wording itself may matter less than providing a post-caption summary position:
+          “Continuation of this caption:” matches “Alternative caption of the same scene:” on 0.5B and beats it on 1.5B
+          Flickr, whereas bare markers like literal “[SEP]” or Qwen’s end-of-text token do not help.</p>
+        <p class="note">Closest to this, Wang et al. raise frozen Qwen3’s alignment with DINOv2 on WIT with sensory
+          prompts (“imagine what it would be like to see…”) <a class="cite" href="#ref-5" data-cite="5">[5]</a>. They
+          let the model generate a continuation and average its hidden states over the generated tokens and over all
+          layers; in a single forward pass averaged over the input tokens, the prompt did not help. The prompted
+          last-token state here needs no generation. Wang et al. also find that mean-pooling over generated tokens beats
+          single-token readouts <a class="cite" href="#ref-7" data-cite="7">[7]</a>. Here, greedily generating an
+          alternative caption and pooling its states did not beat the single prompted last-token state (33.9% vs 35.4%
+          Flickr R@1 on 0.5B), and averaging over all layers, which Wang et al. find often beats any single layer
+          <a class="cite" href="#ref-5" data-cite="5">[5]</a>, does not change that (33.6% vs 34.5%). On the frozen
+          models, layer averaging gives mixed results: on 1.5B it lifts the alternative prompt to 39.2% Flickr R@1 but
+          lowers the continuation prompt from 42.9% to 40.2%, and on the raw caption it falls from 24.1% to 12.4% (0.5B)
+          unless each layer is normalised before averaging (26.9%).</p>
+        <figure id="fig3">
+          <h4>Figure 5 · Frozen Qwen2.5: raw caption vs prompted readout</h4>
+          <div class="ui"><label for="m3">Metric</label>
+            <select id="m3">
+              <option value="fl30k">Flickr R@1, rotation fitted on 30k pairs</option>
+              <option value="fl1k">Flickr R@1, rotation fitted on 1k pairs</option>
+              <option value="best">WIT-1024 mutual 10-NN, best layer pair (paper protocol)</option>
+              <option value="fixed">WIT-1024 mutual 10-NN, layers fixed to the baseline’s</option>
+            </select>
+          </div>
+          <div class="chart" id="chart3" role="group" aria-label="Bar chart of Qwen readouts"></div>
+          <div class="legend">
+            <span><i style="background:var(--qwen);opacity:.42"></i>raw caption, mean (paper)</span>
+            <span><i style="background:var(--qwen)"></i>prompt, last token</span>
+            <span id="ref3"></span>
+          </div>
+          <figcaption id="cap3"></figcaption>
+        </figure>
+        <h4>All 15 readout conditions</h4>
         <p class="note">Hover a condition for its exact input and pooling. WIT columns use the PRH protocol (best layer
           pair). The Flickr column uses the paper’s Flickr protocol: final layer, rotation fitted on 30k pairs, R@1
           among 1,000 test captions.</p>
@@ -1078,7 +1164,7 @@ Alternative caption of the same scene:</code></pre>
           <li><b>Metrics.</b> Mutual 10-NN and R@1 follow the authors’ <code>prh.metrics.alignment</code>. The 1,014
             validation pairs (or 30,014 train+validation pairs) fit the means and one orthogonal map. Scores are on the
             1,000 Flickr test pairs, using one caption per image.</li>
-          <li><b>Readouts.</b> All are from the final layer. “Mean” averages all non-padding positions, including [CLS]
+          <li><b>Readouts.</b> All are from the final layer, except the layer averages in Appendices A1 and A3. “Mean” averages all non-padding positions, including [CLS]
             and [SEP]. h([SEP]) is the state at the final [SEP] of <code>[CLS] a [SEP]</code>. Evaluation inputs never
             contain a second caption.</li>
           <li><b>Uncertainty.</b> Every training arm has one seed. The paper’s seed spread for paired NTP is ±0.4 (1k)
@@ -1093,8 +1179,11 @@ Alternative caption of the same scene:</code></pre>
             when its h([CLS]) became nearly constant and R@1 fell to 0.2%. The seed-1 run shown here stayed healthy and
             matches the paper (24.9% vs 24.6%, mutual 10-NN .232 vs .232).</li>
           <li>The paired NTP run was also trained with the authors’ unchanged code (prh-proof <code>a2b9949</code>,
-            stable-pretraining <code>ab836bf</code>, PyTorch 2.11) on one H100. The conditional run used the same pinned
+            stable-pretraining <code>ab836bf</code>, PyTorch 2.11). The conditional run used the same pinned
             code, with only the loss mask changed.</li>
+          <li>The web-scale runs use the repository’s <code>--data recaptext:11</code> (2.24M images, 20 epochs of 1M
+            samples) and <code>--data recaptext:250</code> (50.9M images, 40 epochs), with <code>--objective ntp
+            --caption-views --lr 1e-4 --clip 1.0</code>.</li>
           <li>Flickr-trained models of every kind barely transfer to WIT-1024 (mutual 10-NN ≈ .03), as the paper also
             notes, so I don’t use WIT for them.</li>
         </ul>
@@ -1119,8 +1208,8 @@ Alternative caption of the same scene:</code></pre>
             Somewhere in the Middle (of the Generated Tokens)</a>. arXiv:2605.09969, 2026.</li>
       </ol>
 
-      <details class="bib" open>
-        <summary>Citation if needed.</summary>
+      <details class="bib">
+        <summary>Citation</summary>
         <div class="bibcard">
           <div class="bibbar"><i></i><i></i><i></i><span>BIBTEX</span><button type="button" id="bibcopy">COPY</button></div>
 <pre><code id="bibtex"><span class="bk">@article</span><span class="bp">{</span><span class="bid">bernwald2026goodviews</span><span class="bp">,</span>
@@ -1165,11 +1254,11 @@ Alternative caption of the same scene:</code></pre>
       const MOD = {
         ordinary: {
           name: "Ordinary NTP", color: "var(--ordinary)", sub: "one caption",
-          tip: "Causal BERT-S (33M) trained to predict the next token of one caption per image per epoch. 200 epochs, seed 0. Trained with a GPT-written loop that replicates the paper’s recipe."
+          tip: "Causal BERT-S (33M) trained to predict the next token of one caption per image per epoch. 200 epochs, seed 0. Trained with a reimplementation of the paper’s recipe."
         },
         paired: {
           name: "Paired NTP", color: "var(--paired)", sub: "the paper’s control",
-          tip: "Causal BERT-S trained on <code>[CLS] a [SEP] b [SEP]</code>, where a and b are two captions of the same image, with token loss on both captions. This is the paper’s own control (Sec. 3.1), trained with the authors’ unchanged code: 200 epochs, seed 0, one H100. An independent GPT-run replicate stopped at epoch 139 gives 14.0% → 22.2% (1k) and 26.1% → 31.5% (30k)."
+          tip: "Causal BERT-S trained on <code>[CLS] a [SEP] b [SEP]</code>, where a and b are two captions of the same image, with token loss on both captions. This is the paper’s own control (Sec. 3.1), trained with the authors’ unchanged code: 200 epochs, seed 0."
         },
         conditional: {
           name: "Conditional NTP", color: "var(--conditional)", sub: "loss only on b",
@@ -1180,8 +1269,8 @@ Alternative caption of the same scene:</code></pre>
           tip: "Bidirectional BERT-S trained with LeJEPA. Its 2 global + 6 local views are trimmed and masked captions, each drawn independently (with replacement) from the captions of the same image (good views). Authors’ code and default recipe, 200 epochs, seed 1 (seed 0 collapsed near epoch 98)."
         }
       };
-      const SRC_MINE = "Claude-run, authors’ code";
-      const SRC_GPT = "GPT-run";
+      const SRC_MINE = "Authors’ code";
+      const SRC_GPT = "Reimplementation of the paper’s recipe";
 
       /* ---------- figure 1 data ---------- */
       const F1 = [
@@ -1194,11 +1283,11 @@ Alternative caption of the same scene:</code></pre>
           bars: [{ ro: "mean", v: { r1k: 13.2, r30k: 23.9, mknn: .1273 } }, { ro: "sep", v: { r1k: 24.5, r30k: 32.1, mknn: .1695 } }]
         },
         {
-          m: "conditional", src: "GPT-run, authors’ code with the loss mask changed", ref: null, paperRO: "mean",
+          m: "conditional", src: "Authors’ code with the loss mask changed", ref: null, paperRO: "mean",
           bars: [{ ro: "mean", v: { r1k: 22.2, r30k: 33.5, mknn: .1654 } }, { ro: "sep", v: { r1k: 27.8, r30k: 38.3, mknn: .1851 } }]
         },
         {
-          m: "jepa", src: "GPT-run, authors’ code", ref: { r1k: "24.6 ± 1.5", r30k: "34.6 ± 0.7", mknn: ".232 ± .006" }, refv: { r1k: 24.6, r30k: 34.6, mknn: .232 }, paperRO: "cls",
+          m: "jepa", src: "Authors’ code", ref: { r1k: "24.6 ± 1.5", r30k: "34.6 ± 0.7", mknn: ".232 ± .006" }, refv: { r1k: 24.6, r30k: 34.6, mknn: .232 }, paperRO: "cls",
           bars: [{ ro: "mean", v: { r1k: 16.7, r30k: 28.5, mknn: .1200 } }, { ro: "cls", v: { r1k: 24.9, r30k: 33.4, mknn: .2321 } }]
         }
       ];
@@ -1377,6 +1466,169 @@ Alternative caption of the same scene:</code></pre>
         drawF2();
       });
 
+      /* ---------- figure 3 (alignment with the image JEPA) ---------- */
+      const S4 = [
+        { id: "ord-mean", m: "ordinary", ro: "mean", dash: true, x: [0, 10, 50, 100, 150, 200],
+          mknn: [0.0127, 0.0178, 0.0322, 0.0382, 0.0429, 0.0462],
+          r1: [0.2, 0.7, 1.2, 1.9, 2.1, 2.2],
+          r5: [0.9, 2.5, 4, 6.8, 7.9, 9.2] },
+        { id: "ord-sep", m: "ordinary", ro: "sep", dash: false, x: [0, 10, 50, 100, 150, 200],
+          mknn: [0.0089, 0.0183, 0.0309, 0.0241, 0.024, 0.025],
+          r1: [0, 0.4, 1.9, 0.9, 0.8, 2],
+          r5: [0.4, 2.5, 4.6, 4.1, 4.9, 4.9] },
+        { id: "paired-mean", m: "paired", ro: "mean", dash: true, x: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200],
+          mknn: [0.011, 0.0197, 0.0229, 0.0289, 0.0305, 0.032, 0.0325, 0.034, 0.038, 0.0404, 0.0381, 0.0392, 0.0415, 0.0429, 0.0425, 0.0418, 0.0438, 0.0455, 0.0464, 0.0454, 0.0459],
+          r1: [0.1, 0.6, 0.8, 1.6, 1.5, 1.2, 1.6, 1.5, 1.6, 2.1, 2, 1.8, 2.5, 2.1, 2.6, 2, 2.1, 2.5, 2.5, 2.5, 2.7],
+          r5: [0.8, 2.2, 3.8, 5.3, 5.3, 5.6, 6.4, 6.7, 7.1, 6.7, 7.9, 7.3, 8.3, 8.4, 9.1, 9.1, 7.8, 8.9, 8.8, 8.4, 8.6] },
+        { id: "paired-sep", m: "paired", ro: "sep", dash: false, x: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200],
+          mknn: [0.0107, 0.0188, 0.0249, 0.0305, 0.0362, 0.0362, 0.04, 0.0415, 0.0421, 0.0447, 0.0449, 0.0462, 0.0474, 0.0498, 0.0517, 0.0512, 0.0527, 0.0533, 0.0547, 0.0548, 0.0553],
+          r1: [0.1, 0.3, 0.8, 0.6, 1.1, 1.1, 1.3, 1.8, 2.3, 2.6, 2.3, 2.7, 3.1, 3.6, 2.8, 3.5, 3.4, 3.4, 3.5, 3.5, 3.6],
+          r5: [0.5, 2, 2.9, 4.3, 4.9, 6.2, 7.1, 7.4, 8, 8.4, 9.1, 9.7, 10.3, 11.2, 10.4, 11.8, 11.9, 12, 12.5, 12.4, 12.7] },
+        { id: "cond-mean", m: "conditional", ro: "mean", dash: true, x: [0, 10, 20, 30, 50, 100, 150, 200],
+          mknn: [0.0127, 0.0187, 0.0263, 0.0294, 0.0332, 0.0404, 0.0495, 0.0499],
+          r1: [0.2, 0.7, 1, 1, 2.1, 3.8, 4.4, 4],
+          r5: [0.9, 2.6, 3.6, 5.2, 7.3, 10.9, 12, 12.8] },
+        { id: "cond-sep", m: "conditional", ro: "sep", dash: false, x: [0, 10, 20, 30, 50, 100, 150, 200],
+          mknn: [0.0089, 0.0197, 0.0263, 0.0333, 0.0399, 0.048, 0.0553, 0.0582],
+          r1: [0, 0.9, 0.7, 1.1, 1.2, 3.4, 3.3, 3.8],
+          r5: [0.4, 2.7, 3.6, 5.3, 6.8, 10.7, 13.1, 13] },
+        { id: "jepa-cls", m: "jepa", ro: "cls", dash: true, x: [0, 10, 20, 30, 50, 100, 150, 200],
+          mknn: [0.0107, 0.023, 0.0327, 0.0358, 0.0433, 0.0516, 0.0603, 0.0625],
+          r1: [0, 1.3, 1.7, 1.5, 1.7, 3.5, 4.9, 4.3],
+          r5: [0.7, 3.9, 4.6, 5.5, 7.2, 11.2, 14.8, 14.9] },
+        { id: "jepa-mean", m: "jepa", ro: "mean", dash: false, x: [0, 10, 20, 30, 50, 100, 150, 200],
+          mknn: [0.0111, 0.0203, 0.024, 0.0281, 0.0277, 0.0363, 0.0441, 0.0436],
+          r1: [0.2, 0.4, 0.9, 1, 1.9, 2.2, 3.2, 3.3],
+          r5: [0.8, 2.3, 2.8, 4.1, 6, 8.7, 10, 10.6] }
+      ];
+      const M4 = {
+        mknn: { name: "Mutual 10-NN", max: .07, ticks: [0, .02, .04, .06], chance: .01, f: v => v.toFixed(3).replace(/^0/, ""),
+          tip: "Mean fraction of shared 10 nearest neighbours between the image JEPA’s and the text encoder’s embeddings of the 1,000 test pairs (chance ≈ .01). The paper’s Figure 5 metric." },
+        r1: { name: "Image→caption R@1", max: 5.5, ticks: [0, 1, 2, 3, 4, 5], chance: .1, f: v => v.toFixed(1) + "%",
+          tip: "Share of the 1,000 test images whose own caption is the nearest of the 1,000 test captions after one orthogonal map fitted on the 1,014 val pairs (chance 0.1%)." },
+        r5: { name: "Image→caption R@5", max: 16, ticks: [0, 5, 10, 15], chance: .5, f: v => v.toFixed(1) + "%",
+          tip: "As R@1, but the own caption only has to be among the 5 nearest (chance 0.5%)." }
+      };
+      const vis4 = { "ord-mean": true, "ord-sep": false, "paired-mean": true, "paired-sep": true, "cond-mean": false, "cond-sep": true, "jepa-cls": true, "jepa-mean": false };
+      const chips4 = document.getElementById("chips4");
+      S4.forEach(s => {
+        const c = document.createElement("button"); c.className = "chip"; c.type = "button";
+        c.setAttribute("aria-pressed", vis4[s.id]);
+        c.innerHTML = `<span class="sw${s.dash ? " dash" : ""}" style="background:${MOD[s.m].color}"></span>${MOD[s.m].name} · ${ROLAB[s.ro]}`;
+        c.addEventListener("click", e => { e.stopPropagation(); vis4[s.id] = !vis4[s.id]; c.setAttribute("aria-pressed", vis4[s.id]); drawF4(); });
+        chips4.appendChild(c);
+      });
+      function drawF4() {
+        const key = document.getElementById("m4").value, M = M4[key], host = document.getElementById("chart4");
+        const W = 700, H = 300, L = 46, R = 14, T = 12, B = 36;
+        const xs = x => L + x / 200 * (W - L - R), ys = y => T + (1 - y / M.max) * (H - T - B);
+        const ns = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(ns, "svg"); svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("width", "100%");
+        svg.setAttribute("role", "img"); svg.setAttribute("aria-label", "Line chart: " + M.name + " with the image JEPA over training epochs");
+        const add = (tag, attrs) => { const e = document.createElementNS(ns, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); svg.appendChild(e); return e; };
+        M.ticks.forEach(t => { add("line", { x1: L, x2: W - R, y1: ys(t), y2: ys(t), class: "grid" }); const tx = add("text", { x: L - 6, y: ys(t) + 4, "text-anchor": "end" }); tx.textContent = key === "mknn" ? t.toFixed(2) : t + "%"; });
+        [0, 50, 100, 150, 200].forEach(t => { const tx = add("text", { x: xs(t), y: H - B + 16, "text-anchor": "middle" }); tx.textContent = t; });
+        const xl = add("text", { x: (L + W - R) / 2, y: H - 4, "text-anchor": "middle" }); xl.textContent = "training epochs (0 = random initialization)";
+        add("line", { x1: L, x2: W - R, y1: ys(M.chance), y2: ys(M.chance), stroke: "var(--muted)", "stroke-dasharray": "1 4", "stroke-width": 1.2 });
+        S4.forEach(s => {
+          if (!vis4[s.id]) return;
+          const col = MOD[s.m].color, pts = s.x.map((x, i) => [x, s[key][i]]);
+          add("polyline", { points: pts.map(p => xs(p[0]) + "," + ys(p[1])).join(" "), fill: "none", stroke: col, "stroke-width": 2.2, "stroke-dasharray": s.dash ? "6 4" : "none", "stroke-linejoin": "round" });
+          pts.forEach(p => {
+            const c = add("circle", { cx: xs(p[0]), cy: ys(p[1]), r: 3.8, fill: col, class: "pt" });
+            bindTip(c, `<b>${MOD[s.m].name} · ${ROLAB[s.ro]}</b><span class="tv">${M.f(p[1])}</span>after ${p[0]} epochs${p[0] === 0 ? " (random initialization)" : ""}, against the image JEPA after the same number of epochs<br><br>${M.tip}<span class="src">One seed</span>`);
+          });
+        });
+        host.innerHTML = ""; host.appendChild(svg);
+      }
+      document.getElementById("m4").addEventListener("change", drawF4);
+
+      /* ---------- figure 4 (scaling) ---------- */
+      const OURS = "Authors’ code, one seed";
+      const S5 = [
+        { id: "jS", label: "good-view JEPA, BERT-S (paper)", col: "var(--jepa)", dash: false, mk: "c", x: [2.16, 10, 50, 100],
+          wit: [.108, .111, .125, .125], fl: [33.5, 34.8, 37.6, 40.2], src: "Paper: WIT from its Section 4.1 / Table 15, Flickr from its Table 2 (three seeds)." },
+        { id: "jB", label: "good-view JEPA, BERT-B (paper)", col: "var(--jepa)", dash: true, mk: "d", x: [2.16, 10, 50, 940],
+          wit: [.109, "≈.104", "≈.115", .184], fl: [38.8, "≈38.6", 40.8, 47.8], src: "Paper: Table 2 and Table 3 (940M: one seed; its four-seed WIT mean is .168). Values with ≈ are read off its figure." },
+        { id: "nS", label: "next-token, BERT-S (paper)", col: "var(--ordinary)", dash: false, mk: "c", x: [2.16, 50],
+          wit: [.071, .079], fl: ["≈23.2", "≈25.4"], src: "Paper: one caption per sequence, mean-pooled. WIT from its Section 4.1; Flickr read off its figure." },
+        { id: "nB", label: "next-token, BERT-B (paper)", col: "var(--ordinary)", dash: true, mk: "d", x: [940],
+          wit: [.111], fl: [33.5], src: "Paper: Table 3, 900M samples." },
+        { id: "bS", label: "bad-view JEPA, BERT-S (paper)", col: "var(--bad)", dash: false, mk: "c", x: [2.16, 50],
+          wit: [.053, .063], fl: ["≈25.7", 29.0], src: "Paper: views are masked spans of one text. WIT from its Section 4.1; Flickr at 50M from its Table 7, at 2M read off its figure." },
+        { id: "bB", label: "bad-view JEPA, BERT-B (paper)", col: "var(--bad)", dash: true, mk: "d", x: [940],
+          wit: [.088], fl: [31.8], src: "Paper: Table 3, one seed." },
+        { id: "pM", label: "paired NTP · mean (ours)", col: "var(--paired)", dash: true, mk: "o", x: [2.24, 50.9],
+          wit: [.075, .082], fl: [23.2, 28.3], src: OURS + ". " + RO.mean },
+        { id: "pS", label: "paired NTP · h([SEP]) (ours)", col: "var(--paired)", dash: false, mk: "c", x: [2.24, 50.9],
+          wit: [.093, .103], fl: [25.3, 26.8], src: OURS + ". " + RO.sep },
+        { id: "pT", label: "paired NTP · “the” (ours)", col: "var(--paired)", dash: false, mk: "s", x: [2.24, 50.9],
+          wit: [.104, .114], fl: [30.1, 32.2], src: OURS + ". Input <code>[CLS] a [SEP] the</code>; the state at “the”. Chosen on the 2M test sets (Appendix A2), fixed before the 50M run." },
+        { id: "pG", label: "paired NTP · “this image shows” + generated (ours)", col: "var(--paired)", dash: false, mk: "t", x: [2.24, 50.9],
+          wit: [.091, .103], fl: [31.4, 33.4], src: OURS + ". Up to 32 greedy tokens after <code>[CLS] a [SEP] this image shows</code>; mean of the states that predicted them. Chosen on the 2M test sets (Appendix A2), fixed before the 50M run." }
+      ];
+      const P5 = [
+        { key: "wit", title: "WIT-1024 · mutual 10-NN", lo: .04, hi: .2, ticks: [.05, .1, .15, .2], f: v => v.toFixed(3).replace(/^0/, ""),
+          band: [.102, .154, "language models, 0.5–72B", "Pretrained language models of the paper’s Table 16, from Qwen2.5-0.5B (.102) to Qwen2.5-72B (.154), same protocol."] },
+        { key: "fl", title: "Flickr · R@1, 30k rotation", lo: 20, hi: 50, ticks: [20, 30, 40, 50], f: v => v.toFixed(1) + "%",
+          lines: [[48.9, "CLIP text", "CLIP ViT-B/32 text encoder, trained with images (the paper’s Table 2)."], [24.0, "Qwen2.5-0.5B", "Qwen2.5-0.5B, mean-pooled caption (the paper’s Table 2)."]] }
+      ];
+      const vis5 = Object.fromEntries(S5.map(s => [s.id, ["jS", "nS", "pM", "pS", "pG"].includes(s.id)]));  // the rest behind the chips
+      const chips5 = document.getElementById("chips5");
+      const ns5 = "http://www.w3.org/2000/svg";
+      const mark = (add, mk, x, y, col, r) => mk === "d" ? add("polygon", { points: `${x},${y - r * 1.3} ${x + r * 1.3},${y} ${x},${y + r * 1.3} ${x - r * 1.3},${y}`, fill: col, class: "pt" })
+        : mk === "s" ? add("rect", { x: x - r, y: y - r, width: 2 * r, height: 2 * r, fill: col, class: "pt" })
+        : mk === "t" ? add("polygon", { points: `${x},${y - r * 1.3} ${x + r * 1.2},${y + r * .9} ${x - r * 1.2},${y + r * .9}`, fill: col, class: "pt" })
+        : add("circle", { cx: x, cy: y, r: r, fill: mk === "o" ? "var(--card)" : col, stroke: col, "stroke-width": mk === "o" ? 2 : 0, class: "pt" });
+      S5.forEach(s => {
+        const c = document.createElement("button"); c.className = "chip"; c.type = "button"; c.setAttribute("aria-pressed", vis5[s.id]);
+        const sw = document.createElementNS(ns5, "svg"); sw.setAttribute("width", 22); sw.setAttribute("height", 12); sw.setAttribute("aria-hidden", "true");
+        const a = (t, o) => { const e = document.createElementNS(ns5, t); for (const k in o) e.setAttribute(k, o[k]); sw.appendChild(e); return e; };
+        a("line", { x1: 1, x2: 21, y1: 6, y2: 6, stroke: s.col, "stroke-width": 2, "stroke-dasharray": s.dash ? "4 3" : "none" });
+        mark(a, s.mk, 11, 6, s.col, 3.5).removeAttribute("class");
+        c.appendChild(sw); c.appendChild(document.createTextNode(s.label));
+        c.addEventListener("click", e => { e.stopPropagation(); vis5[s.id] = !vis5[s.id]; c.setAttribute("aria-pressed", vis5[s.id]); drawF5(); });
+        chips5.appendChild(c);
+      });
+      function drawF5() {
+        const host = document.getElementById("chart5"); host.innerHTML = "";
+        const W = 360, H = 310, L = 46, R = 10, T = 28, B = 44, X0 = Math.log(1.5), X1 = Math.log(1400);
+        const xs = x => L + (Math.log(x) - X0) / (X1 - X0) * (W - L - R);
+        P5.forEach(p => {
+          const ys = y => T + (1 - (y - p.lo) / (p.hi - p.lo)) * (H - T - B);
+          const svg = document.createElementNS(ns5, "svg"); svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("width", "100%");
+          svg.setAttribute("role", "img"); svg.setAttribute("aria-label", p.title + " against the number of web images behind the training texts");
+          const add = (t, o) => { const e = document.createElementNS(ns5, t); for (const k in o) e.setAttribute(k, o[k]); svg.appendChild(e); return e; };
+          const txt = (x, y, s, o) => { const e = add("text", Object.assign({ x, y }, o || {})); e.textContent = s; return e; };
+          txt(W / 2, 15, p.title, { "text-anchor": "middle", class: "ttl" });
+          p.ticks.forEach(t => { add("line", { x1: L, x2: W - R, y1: ys(t), y2: ys(t), class: "grid" }); txt(L - 6, ys(t) + 4, p.key === "wit" ? t.toFixed(2) : t + "%", { "text-anchor": "end" }); });
+          [[2, "2M"], [10, "10M"], [50, "50M"], [100, ""], [940, "940M"]].forEach(([v, s]) => { add("line", { x1: xs(v), x2: xs(v), y1: T, y2: H - B, class: "grid" }); if (s) txt(xs(v), H - B + 15, s, { "text-anchor": "middle" }); });
+          txt((L + W - R) / 2, H - 6, "web images behind the training texts", { "text-anchor": "middle" });
+          if (p.band) {
+            const r = add("rect", { x: L, width: W - L - R, y: ys(p.band[1]), height: ys(p.band[0]) - ys(p.band[1]), fill: "var(--faint)", opacity: .7 });
+            bindTip(r, `<b>${p.band[2]}</b><span class="tv">${p.f(p.band[0])}–${p.f(p.band[1])}</span>${p.band[3]}`);
+            txt(L + 6, ys(p.band[1]) + 15, p.band[2], { class: "lab" });
+          }
+          (p.lines || []).forEach(([v, s, tp]) => {
+            add("line", { x1: L, x2: W - R, y1: ys(v), y2: ys(v), stroke: "var(--muted)", "stroke-dasharray": "5 4", "stroke-width": 1.2 });
+            v < 30 ? txt(W - R - 4, ys(v) + 14, s, { "text-anchor": "end", class: "lab" }) : txt(L + 6, ys(v) - 5, s, { class: "lab" });
+            const hit = add("rect", { x: L, width: W - L - R, y: ys(v) - 5, height: 10, fill: "transparent" });
+            bindTip(hit, `<b>${s}</b><span class="tv">${p.f(v)}</span>${tp}`);
+          });
+          S5.forEach(s => {
+            if (!vis5[s.id]) return;
+            const pts = s.x.map((x, i) => { const raw = s[p.key][i], approx = typeof raw === "string"; return [x, approx ? parseFloat(raw.slice(1)) : raw, approx]; });
+            pts.slice(1).forEach((q, i) => { const o = pts[i];
+              add("line", { x1: xs(o[0]), y1: ys(o[1]), x2: xs(q[0]), y2: ys(q[1]), stroke: s.col, "stroke-width": 2, "stroke-dasharray": s.dash ? "6 4" : "none" }); });
+            pts.forEach(([x, v, approx]) => {
+              const m = mark(add, s.mk, xs(x), ys(v), s.col, 4.2);
+              bindTip(m, `<b>${s.label}</b><span class="tv">${approx ? "≈" : ""}${p.f(v)}</span>texts of ${x}M images<br><br>${s.src}`);
+            });
+          });
+          const box = document.createElement("div"); box.appendChild(svg); host.appendChild(box);
+        });
+      }
+
       /* ---------- table 1 ---------- */
       function cellTip(td, html) { bindTip(td, html); }
       function buildT1() {
@@ -1413,17 +1665,17 @@ Alternative caption of the same scene:</code></pre>
       /* ---------- figure 3 ---------- */
       const F3 = [
         {
-          size: "Qwen2.5-0.5B", src: { wit: "WIT: GPT-run, matches the Gemini-run to 4 decimals", fl: "Flickr: GPT-run, paper’s Flickr protocol" },
+          size: "Qwen2.5-0.5B", src: { wit: "", fl: "" },
           raw: { best: .1021, fixed: .1021, fl30k: 24.1, fl1k: 14.0 }, alt: { best: .1378, fixed: .1238, fl30k: 35.4, fl1k: 22.2 }, cont: { best: .1390, fixed: .1243, fl30k: 36.6, fl1k: 23.0 },
           paper: { best: ".102", fixed: ".102", fl30k: "24.0%", fl1k: "13.5%" }
         },
         {
-          size: "Qwen2.5-1.5B", src: { wit: "WIT: Gemini-run", fl: "Flickr: Claude-run in FP16 (FP16 reproduces the FP32 0.5B numbers within 0.2 pts)" },
+          size: "Qwen2.5-1.5B", src: { wit: "", fl: "Run in FP16, which reproduces the FP32 0.5B numbers within 0.2 points." },
           raw: { best: .1078, fixed: null, fl30k: 24.5, fl1k: 16.9 }, alt: { best: .1549, fixed: null, fl30k: 35.3, fl1k: 23.2 }, cont: { best: .1496, fixed: null, fl30k: 42.9, fl1k: 28.9 },
           paper: { best: ".108", fixed: ".108", fl30k: "no Flickr number", fl1k: "no Flickr number" }
         },
         {
-          size: "Qwen2.5-72B", src: { wit: "WIT: GPT-run, full BF16 on one B300", fl: "" },
+          size: "Qwen2.5-72B", src: { wit: "Run in BF16.", fl: "" },
           raw: { best: .1531, fixed: .1531, fl30k: null, fl1k: null }, alt: { best: .1698, fixed: .1642, fl30k: null, fl1k: null }, cont: { best: .1460, fixed: .1304, fl30k: null, fl1k: null },
           paper: { best: ".154", fixed: ".154", fl30k: "–", fl1k: "–" }
         }
@@ -1445,7 +1697,7 @@ Alternative caption of the same scene:</code></pre>
           max: .23, ticks: [0, .05, .1, .15, .2], pct: false, ref: .184, refName: "paper’s 109M good-view JEPA, web text (.184)",
           refTip: "<b>Paper’s 109M good-view JEPA</b><span class='tv'>.184</span>BERT-B trained on the texts of 940M Recap-DataComp images (Table 3 of [1]), mean-pooled under the same WIT protocol.",
           what: "Mutual 10-NN against DINOv2 ViT-B/14 on WIT-1024, best image/text layer pair for this condition (the PRH protocol).",
-          cap: "Mutual 10-NN against DINOv2 ViT-B/14 on the 1,024 WIT pairs, using the PRH protocol of [2] (per-layer features, 95th-percentile clipping, L2 normalisation, best image/text layer pair). The prompts were chosen after looking at results, and layers are searched on the same 1,024 examples, so read these as exploratory. 1.5B was evaluated with an independent (Gemini-written) implementation; on 0.5B, both implementations agree to four decimals."
+          cap: "Mutual 10-NN against DINOv2 ViT-B/14 on the 1,024 WIT pairs, using the PRH protocol of [2] (per-layer features, 95th-percentile clipping, L2 normalisation, best image/text layer pair). The prompts were chosen after looking at results, and layers are searched on the same 1,024 examples, so read these as exploratory."
         },
         fixed: {
           max: .23, ticks: [0, .05, .1, .15, .2], pct: false, ref: .184, refName: "paper’s 109M good-view JEPA, web text (.184)",
@@ -1500,6 +1752,7 @@ Alternative caption of the same scene:</code></pre>
         cols.forEach((c, i) => { const th = document.createElement("th"); th.textContent = c[0]; if (c[1]) bindTip(th, c[1]); h.appendChild(th); });
         const tb = t.createTBody();
         rows.forEach(r => {
+          if (r.group) { const g = tb.insertRow(); g.className = "grp"; const td = g.insertCell(); td.colSpan = cols.length; td.innerHTML = r.group; return; }
           const tr = tb.insertRow(); if (r.cls) tr.className = r.cls;
           r.cells.forEach((v, i) => { const td = tr.insertCell(); td.innerHTML = v == null ? "–" : v; const tipHtml = i === 0 ? r.tip : (cols[i][2] ? `<b>${r.cells[0].replace(/<[^>]+>/g, "")}</b><span class="tv">${v == null ? "–" : v}</span>${cols[i][2]}` : null); if (tipHtml) bindTip(td, tipHtml); });
         });
@@ -1510,11 +1763,20 @@ Alternative caption of the same scene:</code></pre>
       simpleTable("tWeb",
         [["Model · readout"], ["WIT 10-NN", WEBTIP.wit, WEBTIP.wit], ["Flickr R@1 (30k)", WEBTIP.r30k, WEBTIP.r30k], ["Flickr 10-NN", WEBTIP.mknn, WEBTIP.mknn]],
         [
-          { cls: "sub", cells: ["paper, ordinary NTP (3 seeds)", ".070–.071", "22.3–24.6%", "–"], tip: "The paper’s 2M point (recap2-text-ntp, texts of 2.16M images, 21.6M samples): next-token prediction on one text per image, mean-pooled." },
-          { cells: [dot("paired") + "Paired NTP · mean", ".075", "23.2%", ".103"], tip: "Paired NTP on the texts of 2.24M Recap images (recaptext:11), authors’ code, the schedule of the paper’s Table 7 JEPA control: 20 × 1M samples, lr 1e-4, clip 1.0. Seed 0.<br><br>" + RO.mean },
+          { group: "Texts of 2.24M images <span class='note'>(20 × 1M samples)</span>" },
+          { cls: "sub", cells: ["paper, ordinary NTP (3 seeds)", ".070–.071", "22.3–24.6%", "–"], tip: "The paper’s 2M point (texts of 2.16M images, 21.6M samples): next-token prediction on one text per image, mean-pooled." },
+          { cells: [dot("paired") + "Paired NTP · mean", ".075", "23.2%", ".103"], tip: "Paired NTP on the texts of 2.24M Recap images, authors’ code, the schedule of the paper’s Table 7 JEPA control: 20 × 1M samples, lr 1e-4, clip 1.0. Seed 0.<br><br>" + RO.mean },
           { cells: [dot("paired") + "Paired NTP · h([SEP])", ".093", "25.3%", ".140"], tip: "Same checkpoint.<br><br>" + RO.sep },
           { cells: [dot("paired") + "Paired NTP · “the” <span class='note'>(exploratory)</span>", ".104", "30.1%", ".182"], tip: "Same checkpoint. Input <code>[CLS] a [SEP] the</code>; the state at “the” is read. “the” starts almost every Recap recaption. Best of ten readouts scored on these test sets, so optimistically selected (Appendix A2)." },
-          { cls: "sub", cells: ["paper, good-view JEPA (3 seeds)", ".107 (.095–.115)", "33.9%", "–"], tip: "The paper’s Table 7: BERT-S good-view JEPA on the same recaptext:11 texts (20 × 1M samples), mean-pooled on WIT, h([CLS]) on Flickr." }
+          { cells: [dot("paired") + "Paired NTP · “this image shows” + generated, pooled <span class='note'>(exploratory)</span>", ".091", "31.4%", ".174"], tip: "Same checkpoint. Input <code>[CLS] a [SEP] this image shows</code>, then up to 32 greedily generated tokens; the mean of the states that predicted the generated tokens. Best Flickr result of twelve generated-pooling variants (three prefixes, 8 or 32 tokens, two poolings), scored on these test sets, so optimistically selected (Appendix A2)." },
+          { cls: "sub", cells: ["paper, good-view JEPA (3 seeds)", ".107 (.095–.115)", "33.9%", "–"], tip: "The paper’s Table 7: BERT-S good-view JEPA on the same texts of 2.24M images (20 × 1M samples), mean-pooled on WIT, h([CLS]) on Flickr." },
+          { group: "Texts of 50.9M images <span class='note'>(40 × 1M samples)</span>" },
+          { cls: "sub", cells: ["paper, ordinary NTP", ".079", "≈25%", "–"], tip: "The paper’s 50M next-token control: next-token prediction on one text per image, mean-pooled. WIT value from its Section 4.1; Flickr R@1 read off its scaling figure (its text gives no number)." },
+          { cells: [dot("paired") + "Paired NTP · mean", ".082", "28.3%", ".110"], tip: "Paired NTP on the texts of 50.9M Recap images, authors’ code, the schedule of the paper’s 50M runs: 40 × 1M samples, lr 1e-4, clip 1.0, max length 64. Seed 0.<br><br>" + RO.mean },
+          { cells: [dot("paired") + "Paired NTP · h([SEP])", ".103", "26.8%", ".129"], tip: "Same checkpoint.<br><br>" + RO.sep },
+          { cells: [dot("paired") + "Paired NTP · “the”", ".114", "32.2%", ".168"], tip: "Same checkpoint, same readout as the 2M “the” row. Chosen on the 2M test sets and fixed before this model was trained, so not selected on these numbers." },
+          { cells: [dot("paired") + "Paired NTP · “this image shows” + generated, pooled", ".103", "33.4%", ".178"], tip: "Same checkpoint, same readout as the 2M row (up to 32 greedy tokens; mean of the states that predicted them). Chosen on the 2M test sets and fixed before this model was trained. All 32 tokens were generated for every caption." },
+          { cls: "sub", cells: ["paper, good-view JEPA (3 seeds)", ".125", "37.6%", ".219"], tip: "The paper’s BERT-S good-view JEPA on the texts of 50M images: Flickr from its Table 2 (R@1 .376 ± .006, mutual 10-NN .219 ± .002, h([CLS])), WIT from its Section 4.1 (mean-pooled)." }
         ]);
       simpleTable("tA6",
         [["Readout"], ["Flickr R@1 (1k)", MET.r1k.tip, MET.r1k.tip], ["Flickr R@1 (30k)", MET.r30k.tip, MET.r30k.tip], ["Flickr 10-NN", MET.mknn.tip, MET.mknn.tip], ["WIT 10-NN", WEBTIP.wit, WEBTIP.wit]],
@@ -1566,8 +1828,8 @@ Alternative caption of the same scene:</code></pre>
         [
           { cells: [dot("ordinary") + "Ordinary · mean", "33.1%", ".424", ".611", "3.3%"], tip: MOD.ordinary.tip + "<br><br>" + RO.mean },
           { cells: [dot("ordinary") + "Ordinary · h([SEP])", "12.6%", ".428", ".432", "1.5%"], tip: MOD.ordinary.tip + "<br><br>" + RO.sep },
-          { cells: [dot("paired") + "Paired · mean", "36.7%", ".447", ".633", "3.4%"], tip: MOD.paired.tip + "<br><br>" + RO.mean + "<br><br>The GPT-run checkpoint at ≈139 epochs gives 36.6% / .445 / .641 / 3.4%." },
-          { cells: [dot("paired") + "Paired · h([SEP])", "53.8%", ".582", ".791", "5.5%"], tip: MOD.paired.tip + "<br><br>" + RO.sep + "<br><br>The GPT-run checkpoint at ≈139 epochs gives 53.6% / .569 / .793 / 5.7%." },
+          { cells: [dot("paired") + "Paired · mean", "36.7%", ".447", ".633", "3.4%"], tip: MOD.paired.tip + "<br><br>" + RO.mean },
+          { cells: [dot("paired") + "Paired · h([SEP])", "53.8%", ".582", ".791", "5.5%"], tip: MOD.paired.tip + "<br><br>" + RO.sep },
           { cells: [dot("conditional") + "Conditional · mean", "50.6%", ".550", ".734", "6.7%"], tip: MOD.conditional.tip + "<br><br>" + RO.mean },
           { cells: [dot("conditional") + "Conditional · h([SEP])", "<b>62.3%</b>", "<b>.572</b>", "<b>.816</b>", "<b>7.9%</b>"], tip: MOD.conditional.tip + "<br><br>" + RO.sep },
           { cells: [dot("jepa") + "JEPA · h([CLS])", "60.6%", ".561", ".803", "6.8%"], tip: MOD.jepa.tip + "<br><br>" + RO.cls },
@@ -1594,8 +1856,8 @@ Alternative caption of the same scene:</code></pre>
       simpleTable("tA2",
         [["Condition"],
         ["0.5B · WIT", "Qwen2.5-0.5B, WIT-1024 mutual 10-NN, best layer pair.", "Qwen2.5-0.5B, WIT-1024 mutual 10-NN (best layer pair). Paper baseline .102."],
-        ["1.5B · WIT", "Qwen2.5-1.5B, WIT-1024 mutual 10-NN, best layer pair. Gemini-run.", "Qwen2.5-1.5B, WIT-1024 mutual 10-NN (best layer pair), Gemini-run. Paper baseline .108."],
-        ["72B · WIT", "Qwen2.5-72B in full BF16, WIT-1024 mutual 10-NN, best layer pair.", "Qwen2.5-72B, WIT-1024 mutual 10-NN (best layer pair). Paper baseline .154; paper’s 109M JEPA .184."],
+        ["1.5B · WIT", "Qwen2.5-1.5B, WIT-1024 mutual 10-NN, best layer pair.", "Qwen2.5-1.5B, WIT-1024 mutual 10-NN (best layer pair). Paper baseline .108."],
+        ["72B · WIT", "Qwen2.5-72B in BF16, WIT-1024 mutual 10-NN, best layer pair.", "Qwen2.5-72B, WIT-1024 mutual 10-NN (best layer pair). Paper baseline .154; paper’s 109M JEPA .184."],
         ["0.5B · Flickr R@1", "Qwen2.5-0.5B, final layer, rotation fitted on 30,014 Flickr pairs, image→caption R@1 among 1,000 test captions (paper’s Flickr protocol; paper baseline ≈24%).", "Qwen2.5-0.5B, Flickr R@1 with the 30k-pair rotation, final layer."],
           ["1.5B · Flickr R@1", "Qwen2.5-1.5B (FP16), same Flickr protocol. Only the three main conditions were run.", "Qwen2.5-1.5B, Flickr R@1 with the 30k-pair rotation, final layer, FP16."]],
         QC.map(q => ({ cells: [`<code>${q[0]}</code>`, q[2], q[3], q[4], q[5], q[6]], tip: `<b>${q[0]}</b><br>${q[1]}` })));
@@ -1606,7 +1868,7 @@ Alternative caption of the same scene:</code></pre>
         ["R@1 (1k)", MET.r1k.tip, MET.r1k.tip], ["R@1 (30k)", MET.r30k.tip, MET.r30k.tip], ["Mutual 10-NN", MET.mknn.tip, MET.mknn.tip],
         ["Eff. rank", RANKTIP, RANKTIP]],
         [
-          { cells: [dot("paired") + "Paired · mean", "18.1%", "26.5%", ".145", "40"], tip: "Paired NTP (joint loss on a and b), a and b two captions of the same image. GPT-run pilot, 25 epochs.<br><br>" + RO.mean },
+          { cells: [dot("paired") + "Paired · mean", "18.1%", "26.5%", ".145", "40"], tip: "Paired NTP (joint loss on a and b), a and b two captions of the same image. 25-epoch pilot.<br><br>" + RO.mean },
           { cells: [dot("paired") + "Paired · h([SEP])", "18.9%", "27.1%", ".160", "18"], tip: "Paired NTP, 25-epoch pilot.<br><br>" + RO.sep },
           { cells: [dot("conditional") + "Conditional · mean", "20.2%", "30.0%", ".162", "32"], tip: "Loss only on b; a is another caption of the <b>same</b> image. 25-epoch pilot.<br><br>" + RO.mean },
           { cells: [dot("conditional") + "Conditional · h([SEP])", "<b>22.9%</b>", "<b>31.1%</b>", ".160", "18"], tip: "Loss only on b; a is another caption of the <b>same</b> image. 25-epoch pilot.<br><br>" + RO.sep },
@@ -1621,6 +1883,19 @@ Alternative caption of the same scene:</code></pre>
           { cells: ["mean", "16.7%", "28.5%", ".120"], tip: RO.mean },
           { cells: ["h([SEP])", "11.1%", "21.7%", ".071"], tip: "Final [SEP] state of the bidirectional JEPA encoder. Nothing trains it specifically." }
         ]);
+      const LATIP = "Final layer → average of the 12 block outputs.";
+      simpleTable("tLA",
+        [["Model · readout"], ["R@1 (1k)", MET.r1k.tip + " " + LATIP, LATIP], ["R@1 (30k)", MET.r30k.tip + " " + LATIP, LATIP], ["Mutual 10-NN", MET.mknn.tip + " " + LATIP, LATIP]],
+        [
+          ["ordinary", "mean", "11.1% → <b>14.3%</b>", "19.9% → <b>23.2%</b>", ".123 → <b>.130</b>"],
+          ["ordinary", "sep", "<b>6.6%</b> → 4.1%", "<b>12.4%</b> → 12.0%", "<b>.049</b> → .027"],
+          ["paired", "mean", "13.2% → <b>16.3%</b>", "23.9% → <b>26.8%</b>", ".127 → <b>.135</b>"],
+          ["paired", "sep", "<b>24.5%</b> → 22.2%", "<b>32.1%</b> → 30.5%", "<b>.169</b> → .158"],
+          ["conditional", "mean", "<b>22.2%</b> → 21.1%", "33.5% → <b>34.5%</b>", ".165 → <b>.173</b>"],
+          ["conditional", "sep", "<b>27.8%</b> → 23.9%", "<b>38.3%</b> → 36.9%", "<b>.185</b> → .146"],
+          ["jepa", "cls", "<b>24.9%</b> → 24.5%", "<b>33.4%</b> → 32.0%", ".232 → <b>.236</b>"],
+          ["jepa", "mean", "<b>16.7%</b> → 16.6%", "<b>28.5%</b> → 26.4%", ".120 → <b>.123</b>"]
+        ].map(r => ({ cells: [dot(r[0]) + MOD[r[0]].name + " · " + ROLAB[r[1]], r[2], r[3], r[4]], tip: "<b>" + MOD[r[0]].name + "</b><br>" + MOD[r[0]].tip + "<br><br>" + RO[r[1]] })));
 
       /* ---------- citation hover cards ---------- */
       const REFS = {
@@ -1637,7 +1912,7 @@ Alternative caption of the same scene:</code></pre>
         bindTip(a, html + '<span class="src">click to jump to the reference list</span>');
       });
 
-      drawF1(); drawF2(); buildT1(); drawF3();
+      drawF1(); drawF2(); drawF4(); drawF5(); buildT1(); drawF3();
     })();
   </script>
 
