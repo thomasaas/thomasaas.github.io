@@ -7,7 +7,7 @@
   <title>Good Views Hidden in Plain Sight: JEPA vs Next-Token Prediction</title>
   <link rel="icon" type="image/png" sizes="32x32" href="tb-icon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="tb-apple-touch-icon.png">
-  <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="%232b7a52"/><path d="M5.5 7H20a4.5 4.5 0 0 1 0 9h-6.5M13.5 16H21a5 5 0 0 1 0 10h-7.5M13.5 7v19" fill="none" stroke="%23fff" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="square"/></svg>'>
+  <link rel="icon" type="image/svg+xml" href="tb-icon.svg">
   <meta name="description"
     content="Read at the token its objective supervises, the paired next-token baseline of 'Proving and Improving the Platonic Representation Hypothesis with JEPAs' matches good-view JEPA on retrieval.">
   <meta name="author" content="Thomas Bernwald">
@@ -63,6 +63,7 @@
       --card: #ffffff;
       --code: #eaf2ec;
       --accent: #2b7a52;
+      --tb-blob: #d6e6d3;
       --ordinary: #7d848f;
       --paired: #d9822b;
       --conditional: #1f8a7a;
@@ -82,6 +83,7 @@
         --card: #1a211e;
         --code: #222b26;
         --accent: #7fd3a5;
+      --tb-blob: #24382e;
         --ordinary: #9aa1ab;
         --paired: #f0a050;
         --conditional: #43c2ad;
@@ -101,6 +103,7 @@
       --card: #1a211e;
       --code: #222b26;
       --accent: #7fd3a5;
+      --tb-blob: #24382e;
       --ordinary: #9aa1ab;
       --paired: #f0a050;
       --conditional: #43c2ad;
@@ -160,6 +163,26 @@
     .home a:hover {
       color: var(--accent);
       text-decoration: underline
+    }
+
+    .home a.tb-home {
+      display: inline-flex;
+      align-items: center;
+      gap: .65rem
+    }
+
+    .home a.tb-home:hover {
+      text-decoration: none
+    }
+
+    .home a.tb-home:hover span {
+      text-decoration: underline
+    }
+
+    .tb-logo {
+      display: block;
+      flex: none;
+      overflow: visible
     }
 
     .subtitle {
@@ -779,7 +802,7 @@
 
 <body>
   <main>
-    <nav class="home"><a href="./">← All posts</a></nav>
+    <nav class="home"><a class="tb-home" href="./"><svg viewBox="0 0 100 100" class="tb-logo" width="40" height="40" aria-hidden="true" focusable="false"><defs><filter id="tbRough" x="-15%" y="-15%" width="130%" height="130%"><feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="2.2" xChannelSelector="R" yChannelSelector="G"/></filter><filter id="tbRough2" x="-15%" y="-15%" width="130%" height="130%"><feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="11"/><feDisplacementMap in="SourceGraphic" scale="2.86" xChannelSelector="R" yChannelSelector="G"/></filter></defs><path d="M88.62 50 C89.38 58.5 88.01 71.18 82.67 77.42 C77.34 83.65 65.36 86.23 56.6 87.4 C47.83 88.57 37.86 88.26 30.11 84.45 C22.36 80.64 12.55 72.38 10.07 64.53 C7.6 56.68 12.04 45.74 15.26 37.35 C18.47 28.97 22.36 18.94 29.35 14.23 C36.34 9.53 49.08 7.09 57.21 9.12 C65.33 11.15 72.86 19.61 78.1 26.42 C83.33 33.24 87.85 41.5 88.62 50 Z" fill="var(--tb-blob)"/><g filter="url(#tbRough2)" opacity="0.28"><g class="tb-rot"><g transform="translate(50 50) scale(0.56) translate(-47.21 -50)" stroke-width="7.14" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M23 22 H41" stroke="var(--fg)"/><path class="tb-stem" d="M32 22 Q25 50 32 78" stroke="var(--fg)"/><path d="M52.93 22 L64.13 30.21 Q66.93 32.27 64.13 34.32 L52.93 42.54" stroke="var(--accent)"/><path class="tb-eyeB" d="M52.93 51.46 L67.73 62.08 Q71.43 64.73 67.73 67.39 L52.93 78" stroke="var(--accent)"/></g></g></g><g filter="url(#tbRough)"><g class="tb-rot"><g transform="translate(50 50) scale(0.56) translate(-47.21 -50)" stroke-width="8.93" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M23 22 H41" stroke="var(--fg)"/><path class="tb-stem" d="M32 22 Q25 50 32 78" stroke="var(--fg)"/><path d="M52.93 22 L64.13 30.21 Q66.93 32.27 64.13 34.32 L52.93 42.54" stroke="var(--accent)"/><path class="tb-eyeB" d="M52.93 51.46 L67.73 62.08 Q71.43 64.73 67.73 67.39 L52.93 78" stroke="var(--accent)"/></g></g></g></svg><span>← All posts</span></a></nav>
     <article>
       <h1>Good Views Hidden in Plain Sight</h1>
       <p class="subtitle">A Closer Look at the Next-Token Baselines in “Proving and Improving the Platonic Representation
@@ -1950,6 +1973,57 @@ Alternative caption of the same scene:</code></pre>
         var ok = false; try { ok = document.execCommand("copy"); } catch (e) {}
         done(ok);
       }
+    })();
+  </script>
+  <script>
+    // TB logo: on hover the mark turns into a smiling face, the T curves a little more, then it winks.
+    (function () {
+      var link = document.querySelector('.tb-home');
+      if (!link) return;
+      var rots = link.querySelectorAll('.tb-rot');
+      var stems = link.querySelectorAll('.tb-stem');
+      var eyes = link.querySelectorAll('.tb-eyeB');
+      var EYE = 'M52.93 51.46 L67.73 62.08 Q71.43 64.73 67.73 67.39 L52.93 78';
+      var LID = 'M62.18 51.46 V78';
+      var REST = 7, TURN = 9, DUR = 600;
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var p = 0, target = 0, raf = 0, last = 0, timers = [];
+      function easeOutBack(x) { var c1 = 1.4, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); }
+      function easeInOut(x) { return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2; }
+      function each(list, fn) { for (var i = 0; i < list.length; i++) fn(list[i]); }
+      function draw() {
+        var deg = p === 0 ? 0 : -90 * easeOutBack(p);
+        var sm = REST + (TURN - REST) * easeInOut(p);
+        each(rots, function (r) { r.setAttribute('transform', 'rotate(' + deg.toFixed(2) + ' 50 50)'); });
+        each(stems, function (s) { s.setAttribute('d', 'M32 22 Q' + (32 - sm).toFixed(2) + ' 50 32 78'); });
+      }
+      function setEye(d) { each(eyes, function (e) { e.setAttribute('d', d); }); }
+      function wink(delay) {
+        timers.push(setTimeout(function () { setEye(LID); }, delay));
+        timers.push(setTimeout(function () { setEye(EYE); }, delay + 400));
+      }
+      function reset() { timers.forEach(clearTimeout); timers = []; setEye(EYE); }
+      function step(ts) {
+        if (!last) last = ts;
+        var dt = ts - last; last = ts;
+        var dir = target > p ? 1 : -1;
+        p += dir * dt / DUR;
+        var done = dir > 0 ? p >= target : p <= target;
+        if (done) p = target;
+        draw();
+        if (done) { raf = 0; if (p === 1) wink(250); return; }
+        raf = requestAnimationFrame(step);
+      }
+      function go(t) {
+        reset();
+        if (reduce) { if (t === 1) wink(0); return; }
+        target = t;
+        if (!raf) { last = 0; raf = requestAnimationFrame(step); }
+      }
+      link.addEventListener('mouseenter', function () { go(1); });
+      link.addEventListener('mouseleave', function () { go(0); });
+      link.addEventListener('focus', function () { go(1); });
+      link.addEventListener('blur', function () { go(0); });
     })();
   </script>
 </body>
