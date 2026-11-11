@@ -8,6 +8,9 @@
   <link rel="icon" type="image/png" sizes="32x32" href="tb-icon-32.png?v=2">
   <link rel="apple-touch-icon" sizes="180x180" href="tb-apple-touch-icon.png?v=2">
   <link rel="icon" type="image/svg+xml" href="tb-icon.svg?v=2">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400..650&display=swap">
   <script>try { var t = localStorage.getItem('blog-theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (_) {}</script>
   <meta name="description"
     content="Read at the token its objective supervises, the paired next-token baseline of 'Proving and Improving the Platonic Representation Hypothesis with JEPAs' matches good-view JEPA on retrieval.">
@@ -57,62 +60,62 @@
   </script>
   <style>
     :root {
-      --bg: #f6faf7;
-      --fg: #1d1d1f;
-      --muted: #5f6368;
-      --faint: #dde8e0;
-      --card: #ffffff;
-      --code: #eaf2ec;
-      --accent: #2b7a52;
-      --tb-blob: #d6e6d3;
+      --bg: #f4efe6;
+      --fg: #1c1a17;
+      --muted: #6a6257;
+      --faint: #e2d9ca;
+      --card: #fbf8f2;
+      --code: #ece5d7;
+      --accent: #1f6c49;
+      --tb-blob: #dce3cd;
       --ordinary: #7d848f;
       --paired: #d9822b;
       --conditional: #1f8a7a;
       --jepa: #6a52d9;
       --qwen: #3c78c3;
       --bad: #c8453c;
-      --tipbg: #1d1d1f;
-      --tipfg: #f2f7f3;
+      --tipbg: #1c1a17;
+      --tipfg: #f6f1e7;
     }
 
     @media (prefers-color-scheme: dark) {
       :root:not([data-theme="light"]) {
-        --bg: #131816;
-        --fg: #ecebe8;
-        --muted: #a3a7ad;
-        --faint: #29332e;
-        --card: #1a211e;
-        --code: #222b26;
-        --accent: #7fd3a5;
-      --tb-blob: #24382e;
+        --bg: #141310;
+        --fg: #ece5d8;
+        --muted: #a8a093;
+        --faint: #2f2b25;
+        --card: #1c1a17;
+        --code: #26231e;
+        --accent: #86cfa3;
+      --tb-blob: #28362a;
         --ordinary: #9aa1ab;
         --paired: #f0a050;
         --conditional: #43c2ad;
         --jepa: #9d8cff;
         --qwen: #6fa8ec;
         --bad: #ff7f75;
-        --tipbg: #edf5f0;
-        --tipfg: #1b1b1d;
+        --tipbg: #f1ebdf;
+        --tipfg: #1c1a17;
       }
     }
 
     :root[data-theme="dark"] {
-      --bg: #131816;
-      --fg: #ecebe8;
-      --muted: #a3a7ad;
-      --faint: #29332e;
-      --card: #1a211e;
-      --code: #222b26;
-      --accent: #7fd3a5;
-      --tb-blob: #24382e;
+      --bg: #141310;
+      --fg: #ece5d8;
+      --muted: #a8a093;
+      --faint: #2f2b25;
+      --card: #1c1a17;
+      --code: #26231e;
+      --accent: #86cfa3;
+      --tb-blob: #28362a;
       --ordinary: #9aa1ab;
       --paired: #f0a050;
       --conditional: #43c2ad;
       --jepa: #9d8cff;
       --qwen: #6fa8ec;
       --bad: #ff7f75;
-      --tipbg: #edf5f0;
-      --tipfg: #1b1b1d;
+      --tipbg: #f1ebdf;
+      --tipfg: #1c1a17;
     }
 
     * {
@@ -824,6 +827,78 @@
     .bib .bid { color: var(--qwen) }
     .bib .bs { color: var(--accent) }
     .bib .bp { color: var(--muted) }
+  
+    /* ---- design layer: paper and ink, editorial type ---- */
+    body { font-family: "Newsreader", Georgia, "Iowan Old Style", serif; font-size: 19px; line-height: 1.6; font-optical-sizing: auto;
+      text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale }
+    ::selection { background: color-mix(in srgb, var(--accent) 24%, transparent) }
+    h1, h2, h3 { font-family: "Fraunces", Georgia, serif; font-optical-sizing: auto; font-weight: 600; letter-spacing: -.015em;
+      text-wrap: balance }
+    .ui, figcaption, table, .chart, .tip, .legend, details summary, figure h4, details h4, .hint, .credit, .lossnote,
+    .rev, button, select, .chip, svg text, a.cite { font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif }
+    code, pre { font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Consolas, monospace }
+    .key { font-family: "Newsreader", Georgia, "Iowan Old Style", serif; font-weight: 600 }
+    a { text-decoration-thickness: 1px; text-underline-offset: .2em;
+      text-decoration-color: color-mix(in srgb, currentColor 40%, transparent) }
+    a:hover { text-decoration-color: currentColor }
+
+    /* masthead */
+    .home, main > header { font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Consolas, monospace; font-size: .74rem; letter-spacing: .08em; text-transform: uppercase;
+      padding-bottom: 1rem; border-bottom: 1px solid var(--faint); margin-bottom: 2.8rem }
+    .brand span { font-family: "Fraunces", Georgia, serif; font-size: 1.2rem; font-weight: 600; letter-spacing: -.01em;
+      text-transform: none }
+    .brand { font-weight: 600 }
+
+    /* post header */
+    article > h1 { font-size: clamp(2.3rem, 5.4vw, 3.3rem); line-height: 1.03; letter-spacing: -.025em; font-weight: 650;
+      margin: 0 0 .9rem }
+    .subtitle { font-family: "Newsreader", Georgia, "Iowan Old Style", serif; font-style: italic; font-size: 1.3rem; line-height: 1.38; color: var(--muted);
+      margin: 0 0 1.6rem; max-width: 36em }
+    article > .meta { font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Consolas, monospace; font-size: .74rem; letter-spacing: .06em; text-transform: uppercase;
+      border-top: 1.5px solid var(--fg); border-bottom: 1px solid var(--faint); padding: .6rem 0; margin-bottom: 1.4rem }
+    article > .meta a { color: var(--accent) }
+    article > .meta:has(+ .rev), article > .meta:has(+ details) { margin-bottom: 1rem }
+
+    /* numbered sections */
+    article { counter-reset: sec }
+    article > h2 { font-size: 1.8rem; line-height: 1.14; margin: 3.4rem 0 .9rem }
+    article > h2:not(:last-of-type)::before { counter-increment: sec; content: counter(sec, decimal-leading-zero);
+      display: block; font: 500 .74rem/1 "IBM Plex Mono", ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .1em; color: var(--accent);
+      padding-top: 1rem; margin-bottom: .7rem; border-top: 1px solid var(--faint) }
+    article > h2:last-of-type { padding-top: 1rem; border-top: 1px solid var(--faint) }
+    article h3 { font-size: 1.28rem; margin: 2.2rem 0 .5rem }
+
+    /* plates, notes, boxes */
+    figure { border-radius: 4px; border-color: var(--faint); box-shadow: 0 1px 0 var(--faint), 0 12px 28px -22px rgba(40, 30, 10, .35) }
+    figure h4 { font-size: .95rem; letter-spacing: -.005em }
+    figcaption { border-top: 1px solid var(--faint); padding-top: .65rem }
+    .tldr { border-radius: 4px; border-left-width: 3px; font-size: 1rem; padding: 14px 18px }
+    details { border-radius: 4px }
+    blockquote { border-left-color: var(--accent); font-size: 1.05em }
+    pre, code { border-radius: 3px }
+    .theme-btn { background: transparent }
+
+    /* home page */
+    main > h1 { font-size: clamp(2.4rem, 6vw, 3.4rem); line-height: 1.02; letter-spacing: -.025em; font-weight: 650; margin: 0 0 .8rem }
+    .follow { font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Consolas, monospace; font-size: .74rem; letter-spacing: .06em; text-transform: uppercase; margin: 0 0 2.6rem }
+    .posts { border-top: 1.5px solid var(--fg) }
+    .posts li { display: grid; grid-template-columns: 9.5rem 1fr; column-gap: 1.6rem; padding: 1.7rem 0 }
+    .posts li .meta { grid-column: 1; grid-row: 1 / span 2; padding-top: .55rem; font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Consolas, monospace; font-size: .72rem;
+      letter-spacing: .06em; text-transform: uppercase }
+    .posts h2 { grid-column: 2; grid-row: 1; font-size: 1.75rem; line-height: 1.12; letter-spacing: -.02em; margin: 0 0 .45rem }
+    .posts h2 a { color: var(--fg); text-decoration: none }
+    .posts h2 a:hover { color: var(--accent); text-decoration: none }
+    .posts p { grid-column: 2; grid-row: 2; margin: 0; color: var(--muted); font-style: italic; font-size: 1.05rem; line-height: 1.45 }
+
+    @media (max-width: 560px) {
+      body { font-size: 17.5px }
+      .subtitle { font-size: 1.15rem }
+      article > h2 { font-size: 1.5rem }
+      .posts li { grid-template-columns: 1fr }
+      .posts li .meta { grid-row: auto; padding: 0 0 .4rem }
+      .posts h2, .posts p { grid-column: 1; grid-row: auto }
+      .posts h2 { font-size: 1.5rem }
+    }
   </style>
 </head>
 
