@@ -899,6 +899,10 @@
       .posts h2, .posts p { grid-column: 1; grid-row: auto }
       .posts h2 { font-size: 1.5rem }
     }
+    .site-note { margin-top: 3.5rem; padding-top: 1rem; border-top: 1px solid var(--faint); color: var(--muted);
+      font: .74rem/1.5 "IBM Plex Mono", ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .04em }
+    .site-note a { color: var(--muted) }
+    @media print { .site-note { display: none } }
   </style>
 </head>
 
@@ -1418,6 +1422,7 @@ Alternative caption of the same scene:</code></pre>
         </div>
       </details>
     </article>
+    <footer class="site-note">Visits are counted with <a href="https://www.goatcounter.com/help/privacy">GoatCounter</a>: no cookies, no tracking across sites.</footer>
   </main>
 
   <div class="tip" id="tip" role="tooltip"></div>
@@ -2249,6 +2254,7 @@ Alternative caption of the same scene:</code></pre>
       sync();
     })();
   </script>
+  <script data-goatcounter="https://thomasaas.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>
 
 </html>
