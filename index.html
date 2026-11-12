@@ -203,8 +203,15 @@
         playOnce();
       });
       if (!canHover) {
+        // Greet when the site is opened from elsewhere and whenever the home page is shown (also via the back
+        // button), but not when following a link from one page of the site to a post.
+        var fromSite = false;
+        try { fromSite = !!document.referrer && new URL(document.referrer).origin === location.origin; } catch (_) {}
         var greet = function () { setTimeout(playOnce, 900); };
-        if (document.readyState === 'complete') greet(); else window.addEventListener('load', greet);
+        if (samePage() || !fromSite) {
+          if (document.readyState === 'complete') greet(); else window.addEventListener('load', greet);
+        }
+        window.addEventListener('pageshow', function (e) { if (e.persisted && samePage()) greet(); });
       }
     })();
   </script>
